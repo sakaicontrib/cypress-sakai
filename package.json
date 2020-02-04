@@ -1,0 +1,25 @@
+{
+  "name": "cypress-sakai",
+  "version": "1.0.0",
+  "description": "Cypress testing for Sakai",
+  "dependencies": {
+    "cypress": "^3.8.3"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "cypress:open": "cypress open"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sakaicontrib/cypress-sakai.git"
+  },
+  "keywords": [
+    "sakai"
+  ],
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/sakaicontrib/cypress-sakai/issues"
+  },
+  "homepage": "https://github.com/sakaicontrib/cypress-sakai#readme"
+}
