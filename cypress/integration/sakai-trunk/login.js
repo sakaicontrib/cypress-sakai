@@ -23,16 +23,16 @@ describe('Logging In - Instructor', function () {
 
     it('displays errors on login', function () {
       // incorrect username on purpose
-      cy.get('input[name=eid]').type('jane.lae')
-      cy.get('input[name=pw]').type('password123{enter}')
+      cy.get('input[name=eid]').type('badusername')
+      cy.get('input[name=pw]').type('sakai{enter}')
 
       // we should have visible errors now
       cy.get('div.alertMessage')
       .should('be.visible')
       .and('contain', 'Invalid login')
 
-      // and still be on the same URL
-      cy.url().should('include', '/portal')
+      // should now be on the direct login page
+      cy.url().should('include', '/portal/xlogin')
     })
 
     it('redirects to /portal on success', function () {
@@ -75,29 +75,10 @@ describe('Logging In - Instructor', function () {
   })
 
   context('Reusable "login" custom command', function () {
-    // typically we'd put this in cypress/support/commands.js
-    // but because this custom command is specific to this example
-    // we'll keep it here
-    Cypress.Commands.add('loginByForm', (username, password) => {
-      Cypress.log({
-        name: 'loginByForm',
-        message: `${username} | ${password}`,
-      })
-
-      return cy.request({
-        method: 'POST',
-        url: '/portal/xlogin',
-        form: true,
-        body: {
-          eid: username,
-          pw: password,
-        },
-      })
-    })
 
     beforeEach(function () {
       // login before each test
-      cy.loginByForm(username, password)
+      cy.sakaiLogin(username)
     })
 
     it('can visit /portal', function () {
@@ -107,7 +88,7 @@ describe('Logging In - Instructor', function () {
       cy.get('.Mrphs-userNav__subnav').should('contain', username)
     })
 
-    it('can visit /portal/site', function () {
+    it('can visit user Home', function () {
       // or another protected page
       cy.visit('/portal/site/~' + username)
       cy.get('.Mrphs-toolsNav__menuitem--title').should('contain', 'Preferences')

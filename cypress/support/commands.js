@@ -8,9 +8,24 @@
 // https://on.cypress.io/custom-commands
 // ***********************************************
 //
-//
-// -- This is a parent command --
-// Cypress.Commands.add("login", (email, password) => { ... })
+
+Cypress.Commands.add('sakaiLogin', (username) => {
+    Cypress.log({
+      name: 'sakaiLogin',
+      message: `${username}`,
+    })
+
+    return cy.request({
+      method: 'POST',
+      url: '/portal/xlogin',
+      form: true,
+      body: {
+        eid: username,
+        pw: 'sakai',
+      },
+    })
+  })
+
 //
 //
 // -- This is a child command --
