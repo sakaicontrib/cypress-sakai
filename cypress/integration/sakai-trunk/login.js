@@ -86,9 +86,7 @@ describe('Logging In - Instructor', function () {
       // and we can visit a protected page
       cy.visit('/portal/')
       cy.get('.Mrphs-userNav__subnav').should('contain', username)
-    })
 
-    it('can visit user Home', function () {
       // or another protected page
       cy.visit('/portal/site/~' + username)
       cy.get('.Mrphs-toolsNav__menuitem--title').should('contain', 'Preferences')
