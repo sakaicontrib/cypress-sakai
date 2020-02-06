@@ -15,7 +15,14 @@ describe('Gradebook', function () {
             cy.get('input#course').click()
             cy.get('select > option').eq(1).then(element => cy.get('select').select(element.val()))
             cy.get('input#submitBuildOwn').click()
-            cy.get('a').contains('select anyway').click()
+
+            // See if site has already been created
+            cy.get('form[name="addCourseForm"]').then(($html) => {
+                if ($html.text().includes('select anyway')) {
+                    cy.get('a').contains('select anyway').click()
+                }
+            })
+
             cy.get('input#continueButton').click()
             cy.get('textarea').last().type('Cypress Testing')
             cy.get('.act input[name="continue"]').click()
