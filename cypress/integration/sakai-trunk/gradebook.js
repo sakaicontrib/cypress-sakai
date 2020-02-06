@@ -13,7 +13,7 @@ describe('Gradebook', function () {
             cy.get('a').contains('Worksite Setup').click()
             cy.get('a').contains('Create New Site').click({ force: true })
             cy.get('input#course').click()
-            cy.get('select').select('Summer 20')
+            cy.get('select').select('Summer')
             cy.get('input#submitBuildOwn').click()
             cy.get('a').contains('select anyway').click()
             cy.get('input#continueButton').click()
