@@ -5,7 +5,10 @@
   "dependencies": {
     "cypress": "^3.8.3"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "eslint": "^6.8.0",
+    "eslint-plugin-cypress": "^2.9.0"
+  },
   "scripts": {
     "cypress:open": "cypress open"
   },
