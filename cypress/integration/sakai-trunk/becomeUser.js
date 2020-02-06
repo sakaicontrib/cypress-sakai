@@ -18,7 +18,8 @@ describe('Become User', function () {
             cy.get('#loginUser a').click()
             cy.get('#loginLinks a').contains('Return to').click()
             cy.visit('/portal/site/!admin')
-            cy.get('.Mrphs-breadcrumb--toolNameText').contains('Administration')
+            cy.get('.Mrphs-breadcrumb--toolNameText').should('not.contain', 'Site Unavailable')
+            cy.get('a.Mrphs-toolsNav__menuitem--link').contains('Become User')
         })
     })
 });
