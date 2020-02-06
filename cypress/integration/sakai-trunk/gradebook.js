@@ -22,7 +22,7 @@ describe('Gradebook', function () {
                     cy.get('a').contains('select anyway').click()
                 }
                 else {
-                    cy.get('input[type="checkbox"]').first().click()
+                    cy.get('form[name="addCourseForm"] input[type="checkbox"]').first().click()
                 }
             })
 
