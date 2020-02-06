@@ -21,11 +21,18 @@ Cypress.Commands.add('sakaiLogin', (username) => {
       form: true,
       body: {
         eid: username,
-        pw: 'sakai',
+        pw: (username === 'admin' ? 'admin' : 'sakai'),
       },
     })
   })
 
+  Cypress.Commands.add('sakaiUuid', () => {
+    let uuid = Cypress.env('TRAVIS_BUILD_NUMBER')
+    if (Cypress._.isEmpty(uuid)) {
+        uuid = Cypress._.floor(Date.now() / 1000)
+    }
+    return Cypress._.toString(uuid);
+  })
 //
 //
 // -- This is a child command --
