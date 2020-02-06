@@ -21,6 +21,9 @@ describe('Gradebook', function () {
                 if ($html.text().includes('select anyway')) {
                     cy.get('a').contains('select anyway').click()
                 }
+                else {
+                    cy.get('input[type="checkbox"]').first().click()
+                }
             })
 
             cy.get('input#continueButton').click()
@@ -61,7 +64,19 @@ describe('Gradebook', function () {
             cy.get('.gb-category-weight input[name$="weight"]').eq(3).clear().type('15')
             cy.get('.gb-category-row input[name$="name"]').eq(4).type('E')
             cy.get('.gb-category-weight input[name$="weight"]').eq(4).clear().type('30')
-            cy.get('.act input[type="button"]').first().click()
+            cy.get('.act input[type="button"]').should('have.class', 'active').click()
+
+            // Now create the gb items
+            cy.reload()
+            cy.get('input[name="cancel"]').click()
+            for (let i = 0; i < 4; i++) {
+                cy.get('button').contains('Add Gradebook Item').click()
+                cy.get('input[name$="title"]').type(i+1)
+                cy.get('input[name$="points"]').type(100)
+                cy.get('select[name$="category"] > option').eq(i).then(element => cy.get('select').select(element.val()))
+                cy.get('button[name$="submit"]').click()
+            }
+
         })
     })
 })
