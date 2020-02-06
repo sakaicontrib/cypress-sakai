@@ -29,7 +29,7 @@ describe('Gradebook', function () {
             cy.get('input#continueButton').click()
             cy.get('textarea').last().type('Cypress Testing')
             cy.get('.act input[name="continue"]').click()
-            cy.get('input#sakai\\.gradebookng').should('be.checked')
+            cy.get('input#sakai\\.gradebookng').check().should('be.checked')
             cy.get('.act input[name="Continue"]').click()
             cy.get('input#continueButton').click()
             cy.get('input#addSite').click()
