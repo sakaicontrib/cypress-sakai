@@ -13,7 +13,7 @@ describe('Gradebook', function () {
             cy.get('a').contains('Worksite Setup').click()
             cy.get('a').contains('Create New Site').click({ force: true })
             cy.get('input#course').click()
-            cy.get('select').select('Summer 2018')
+            cy.get('select').select('Summer 20')
             cy.get('input#submitBuildOwn').click()
             cy.get('a').contains('select anyway').click()
             cy.get('input#continueButton').click()
@@ -55,7 +55,6 @@ describe('Gradebook', function () {
             cy.get('.gb-category-row input[name$="name"]').eq(4).type('E')
             cy.get('.gb-category-weight input[name$="weight"]').eq(4).clear().type('30')
             cy.get('.act input[type="button"]').first().click()
-
         })
     })
 })
