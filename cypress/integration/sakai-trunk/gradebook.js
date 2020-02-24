@@ -36,14 +36,14 @@ describe('Gradebook', function () {
             cy.reload()
             cy.get('input[name="cancel"]').click()
 
-            for (let i = 0; i < 5; i++) {
+/*             for (let i = 0; i < 5; i++) {
                 cy.get('button').contains('Add Gradebook Item').click()
                 cy.get('.wicket-modal input[name$="title"]').type(1 + i)
                 cy.get('.wicket-modal input[name$="points"]').type(100)
                 cy.get('.wicket-modal select[name$="category"] > option').eq(1 + i).then(element => cy.get('.wicket-modal select[name$="category"]').select(element.val()))
                 cy.get('.wicket-modal button[name$="submit"]').click()
                 cy.wait(200)
-            }
+            } */
         })
     })
 })
