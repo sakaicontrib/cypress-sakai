@@ -16,7 +16,7 @@ describe('Gradebook', function () {
             cy.get('a').contains('Categories').click()
             cy.get('input[type="radio"]').last().click()
             for (let i = 0; i < 4; i++) {
-                cy.get('#gradebookSettings button').contains('Add a category').click()
+                cy.get('#settingsCategories button').contains('Add a category').click()
                 cy.wait(200)
                 cy.get('#settingsCategories table').find('tr.gb-category-row').should('have.length', (i+2))
             }
