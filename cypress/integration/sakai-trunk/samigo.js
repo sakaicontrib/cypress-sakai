@@ -45,9 +45,27 @@ describe('Samigo', function () {
             cy.get('#assessmentForm\\:parts').find('.samigo-question-callout').should('have.length', 2)
 
             // Delete the first question and confirm we only have one question
-            cy.get('#assessmentForm\\:parts\\:0\\:parts\\:0\\:deleteitem').click()
-            cy.get('input[type="submit"]').contains('Remove').click()
-            cy.get('#assessmentForm\\:parts').find('.samigo-question-callout').should('have.length', 1)
+            // cy.get('#assessmentForm\\:parts\\:0\\:parts\\:0\\:deleteitem').click()
+            // cy.get('input[type="submit"]').contains('Remove').click()
+            //cy.get('#assessmentForm\\:parts').find('.samigo-question-callout').should('have.length', 1)
+
+            // Publish the quiz
+            cy.get('a').contains('Publish').click()
+            cy.get('#assessmentSettingsAction\\:lateHandling\\:0').click()
+            cy.get('#assessmentSettingsAction\\:endDate').type('12/31/2034 12:30 pm')
+            cy.get('input[type="submit"]').contains('Publish').click()
+            cy.get('input[type="submit"]').contains('Publish').click()
+
+            // Edit the published quiz
+            cy.get('#authorIndexForm\\:coreAssessments button.dropdown-toggle').first().click()
+            cy.get('ul li a').contains('Edit').click()
+            cy.get('input[type="submit"]').contains('Edit').click()
+            cy.get('#assessmentForm\\:parts\\:0\\:parts\\:0\\:modify').click()
+            cy.get('#itemForm textarea').first().type('This is edited question text')
+            cy.get('input[type="submit"]').contains('Save').click()
+            cy.get('#assessmentForm\\:parts').find('.samigo-question-callout').should('have.length', 2)
+            cy.get('input[type="submit"]').contains('Republish').click()
+            cy.get('input[type="submit"]').contains('Republish').click()
         })
     })
 });
