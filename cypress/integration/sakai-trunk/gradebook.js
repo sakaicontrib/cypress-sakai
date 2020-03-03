@@ -17,8 +17,7 @@ describe('Gradebook', function () {
             cy.get('input[type="radio"]').last().click()
             for (let i = 0; i < 4; i++) {
                 cy.get('#settingsCategories button').contains('Add a category').click()
-                cy.wait(200)
-                cy.get('#settingsCategories table').find('tr.gb-category-row').should('have.length', (i+2))
+                cy.wait(500)
             }
             cy.get('.gb-category-row input[name$="name"]').first().type('A')
             cy.get('.gb-category-weight input[name$="weight"]').first().clear().type('10')
