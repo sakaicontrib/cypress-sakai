@@ -12,21 +12,30 @@ describe('Gradebook', function () {
         })
 
         it('Create categories and items', function() {
+            cy.server()
+            // DOM is being modified by Wicket so wait for the POST to complete
+            cy.route('POST', '/portal/site/*/tool/*/settings?1-1.IBehaviorListener.0-form-categoryPanel-settingsCategoriesPanel-categoriesWrap-addCategory').as('addCat')
+
+            // We want to use categories
             cy.get('a[title="Settings"]').click({ force: true})
             cy.get('a').contains('Categories').click()
             cy.get('input[type="radio"]').last().click()
-            for (let i = 0; i < 4; i++) {
-                cy.get('#settingsCategories button').contains('Add a category').click()
-                cy.wait(500)
-            }
             cy.get('.gb-category-row input[name$="name"]').first().type('A')
             cy.get('.gb-category-weight input[name$="weight"]').first().clear().type('10')
+            cy.get('#settingsCategories button').contains('Add a category').click()
+            cy.wait('@addCat')
             cy.get('.gb-category-row input[name$="name"]').eq(1).type('B')
             cy.get('.gb-category-weight input[name$="weight"]').eq(1).clear().type('35')
+            cy.get('#settingsCategories button').contains('Add a category').click()
+            cy.wait('@addCat')
             cy.get('.gb-category-row input[name$="name"]').eq(2).type('C')
             cy.get('.gb-category-weight input[name$="weight"]').eq(2).clear().type('10')
+            cy.get('#settingsCategories button').contains('Add a category').click()
+            cy.wait('@addCat')
             cy.get('.gb-category-row input[name$="name"]').eq(3).type('D')
             cy.get('.gb-category-weight input[name$="weight"]').eq(3).clear().type('15')
+            cy.get('#settingsCategories button').contains('Add a category').click()
+            cy.wait('@addCat')
             cy.get('.gb-category-row input[name$="name"]').eq(4).type('E')
             cy.get('.gb-category-weight input[name$="weight"]').eq(4).clear().type('30')
             cy.get('.act input[type="button"]').should('have.class', 'active').click()
