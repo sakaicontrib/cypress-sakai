@@ -45,9 +45,9 @@ describe('Samigo', function () {
             cy.get('#assessmentForm\\:parts').find('.samigo-question-callout').should('have.length', 2)
 
             // Delete the first question and confirm we only have one question
-            // cy.get('#assessmentForm\\:parts\\:0\\:parts\\:0\\:deleteitem').click()
-            // cy.get('input[type="submit"]').contains('Remove').click()
-            //cy.get('#assessmentForm\\:parts').find('.samigo-question-callout').should('have.length', 1)
+            cy.get('#assessmentForm\\:parts\\:0\\:parts\\:0\\:deleteitem').click()
+            cy.get('input[type="submit"]').contains('Remove').click()
+            cy.get('#assessmentForm\\:parts').find('.samigo-question-callout').should('have.length', 1)
 
             // Publish the quiz
             cy.get('a').contains('Publish').click()
@@ -63,7 +63,7 @@ describe('Samigo', function () {
             cy.get('#assessmentForm\\:parts\\:0\\:parts\\:0\\:modify').click()
             cy.get('#itemForm textarea').first().type('This is edited question text')
             cy.get('input[type="submit"]').contains('Save').click()
-            cy.get('#assessmentForm\\:parts').find('.samigo-question-callout').should('have.length', 2)
+            cy.get('#assessmentForm\\:parts').find('.samigo-question-callout').should('have.length', 1)
             cy.get('input[type="submit"]').contains('Republish').click()
             cy.get('input[type="submit"]').contains('Republish').click()
         })
