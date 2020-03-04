@@ -2,7 +2,7 @@
 describe('Samigo', function () {
     const username = 'instructor1'
 
-    before(function() {
+    beforeEach(function() {
         cy.sakaiLogin(username)
         cy.sakaiCreateCourse(username, "sakai\\.samigo")
         cy.get('.Mrphs-toolsNav__menuitem--link').contains('Tests').click()
@@ -67,5 +67,38 @@ describe('Samigo', function () {
             cy.get('input[type="submit"]').contains('Republish').click()
             cy.get('input[type="submit"]').contains('Republish').click()
         })
+    })
+
+    context('Create a Pool', function () {
+        it('can add and edit question pools', function () {
+            const uuid = Cypress._.random(0, 1e6)
+
+            // Create a new pool
+            cy.get('#authorIndexForm a').contains('Question Pools').click()
+            cy.get('#questionpool\\:add').click()
+            cy.get('#questionpool\\:namefield').type(uuid)
+            cy.get('#questionpool\\:submit').click()
+            cy.get('#questionpool\\:TreeTable a').contains(uuid).click()
+
+            // Add a question to the pool
+            cy.get('a').contains('Add Question').click()
+            cy.get('#content form select').select('Multiple Choice')
+            cy.get('input[type="submit"]').contains('Save').click()
+            cy.get('#itemForm\\:answerptr').clear().type('100.00')
+            cy.get('#itemForm textarea').first().type('What is the main reason so many people moved to California in 1849?')
+            cy.get('#itemForm\\:mcchoices textarea').first().type('California land was fertile, plentiful, and inexpensive.')
+            cy.get('#itemForm\\:mcchoices textarea').eq(1).type('Gold was discovered in central California.')
+            cy.get('#itemForm\\:mcchoices textarea').eq(2).type('The east was preparing for a civil war.')
+            cy.get('#itemForm\\:mcchoices textarea').eq(3).type('They wanted to establish religious settlements.')
+            cy.get('#itemForm\\:mcchoices input[type="radio"]').eq(1).click()
+            cy.get('input[type="submit"]').contains('Save').click()
+
+            // Edit the question
+            cy.get('#editform\\:questionpool-questions\\:0\\:modify').click()
+            cy.get('#itemForm textarea').first().clear().type('Edited question text')
+            cy.get('input[type="submit"]').contains('Save').click()
+            cy.get('#editform\\:questionpool-questions').find('a[title="Edit Question"]').should('have.length', 1)
+        })
+
     })
 });
