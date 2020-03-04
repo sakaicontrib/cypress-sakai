@@ -52,6 +52,8 @@ describe('Samigo', function () {
             // Delete the second part
             cy.get('#assessmentForm\\:parts a[title="Remove Part"]').contains('Remove').last().click()
             cy.get('input[type="submit"]').contains('Remove').click()
+            cy.get('label[for="assessmentForm\\:parts\\:1\\:number"]').should('not.exist')
+            cy.contains('Second Part').should('not.exist')
 
             // Delete the first question and confirm we only have one question
             cy.get('#assessmentForm\\:parts\\:0\\:parts\\:0\\:deleteitem').click()
