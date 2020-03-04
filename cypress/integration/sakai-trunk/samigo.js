@@ -44,6 +44,15 @@ describe('Samigo', function () {
             cy.get('input[type="submit"]').contains('Save').click()
             cy.get('#assessmentForm\\:parts').find('.samigo-question-callout').should('have.length', 2)
 
+            // Add a second part
+            cy.get('#assessmentForm\\:addPart').click()
+            cy.get('#modifyPartForm\\:title').type('Second Part')
+            cy.get('input[type="submit"]').contains('Save').click()
+
+            // Delete the second part
+            cy.get('#assessmentForm\\:parts a[title="Remove Part"]').contains('Remove').last().click()
+            cy.get('input[type="submit"]').contains('Remove').click()
+
             // Delete the first question and confirm we only have one question
             cy.get('#assessmentForm\\:parts\\:0\\:parts\\:0\\:deleteitem').click()
             cy.get('input[type="submit"]').contains('Remove').click()
