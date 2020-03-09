@@ -61,7 +61,7 @@ describe('Samigo', function () {
             cy.get('#assessmentForm\\:parts').find('.samigo-question-callout').should('have.length', 1)
 
             // Publish the quiz
-            cy.get('a').contains('Publish').click()
+            cy.get('a').contains('Settings').click()
             cy.get('body').then(($body) => {
               if ($body.text().includes('not after due date')) {
                 cy.get('#assessmentSettingsAction\\:lateHandling\\:0').click()
