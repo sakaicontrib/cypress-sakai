@@ -62,7 +62,6 @@ describe('Samigo', function () {
 
             // Publish the quiz
             cy.get('a').contains('Publish').click()
-            cy.get('#assessmentSettingsAction\\:lateHandling\\:0').click()
             cy.get('#assessmentSettingsAction\\:endDate').type('12/31/2034 12:30 pm')
             cy.get('input[type="submit"]').contains('Publish').click()
             cy.get('input[type="submit"]').contains('Publish').click()
