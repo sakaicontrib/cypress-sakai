@@ -34,6 +34,13 @@ Cypress.Commands.add('sakaiLogin', (username) => {
     return Cypress._.toString(uuid);
   })
 
+  Cypress.Commands.add("type_ckeditor", (element, content) => {
+    cy.window()
+      .then(win => {
+        win.CKEDITOR.instances[element].setData(content);
+      });
+  });
+
   Cypress.Commands.add('sakaiCreateCourse', (username, toolName) => {
     // Go to user Home and create new course site
     cy.visit('/portal/site/~' + username)
