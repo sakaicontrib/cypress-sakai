@@ -1,16 +1,26 @@
 
 describe('Samigo', function () {
-    const username = 'instructor1'
+    const instructor = 'instructor1'
+    let sakaiUrl
 
     beforeEach(function() {
-        cy.sakaiLogin(username)
-        cy.sakaiCreateCourse(username, "sakai\\.samigo")
-        cy.get('.Mrphs-toolsNav__menuitem--link').contains('Tests').click()
+
     })
 
     context('Create a Quiz', function () {
 
+        it ('can create a new course', function() {
+            cy.sakaiLogin(instructor)
+            cy.sakaiCreateCourse(instructor, "sakai\\.samigo").then(
+                returnUrl => sakaiUrl = returnUrl
+            )
+        })
+
         it('can create a quiz from scratch', function () {
+            cy.sakaiLogin(instructor)
+            cy.visit(sakaiUrl)
+            cy.get('.Mrphs-toolsNav__menuitem--link').contains('Tests').click()
+
             cy.get('#authorIndexForm a').contains('Add').click()
             cy.get('#authorIndexForm\\:title').type('Cypress Quiz')
             cy.get('#authorIndexForm\\:createnew').click()

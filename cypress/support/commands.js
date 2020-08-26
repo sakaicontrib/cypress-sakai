@@ -37,7 +37,11 @@ Cypress.Commands.add('sakaiLogin', (username) => {
   Cypress.Commands.add("type_ckeditor", (element, content) => {
     cy.window()
       .then(win => {
+        if (win.CKEDITOR.instances[element]) {
         win.CKEDITOR.instances[element].setData(content);
+        } else {
+          win.CKEDITOR.instances[0].setData(content);
+        }
       });
   });
 
@@ -70,9 +74,7 @@ Cypress.Commands.add('sakaiLogin', (username) => {
     cy.get('#flashNotif').contains('has been created')
     cy.get('#flashNotif a')
         .should('have.attr', 'href').and('include', '/portal/site/')
-        .then((href) => {
-            cy.visit(href).then((url) => { return url })
-        })
+        .then((href) => { return href })
   })
 //
 //

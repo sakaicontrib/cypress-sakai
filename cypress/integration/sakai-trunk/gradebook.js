@@ -1,17 +1,26 @@
 
 describe('Gradebook', function () {
-    const username = 'instructor1'
+    const instructor = 'instructor1'
+    let sakaiUrl
 
     context('Create site and add gradebook', function () {
 
         before(function () {
-            cy.sakaiLogin(username)
-            cy.sakaiCreateCourse(username, "sakai\\.gradebookng")
+        })
 
-            cy.get('.Mrphs-toolsNav__menuitem--link').contains('Gradebook').click()
+
+        it ('can create a new course', function() {
+            cy.sakaiLogin(instructor)
+            cy.sakaiCreateCourse(instructor, "sakai\\.samigo").then(
+                returnUrl => sakaiUrl = returnUrl
+            )
         })
 
         it('Create categories and items', function() {
+            cy.sakaiLogin(instructor)
+            cy.visit(sakaiUrl)
+            cy.get('.Mrphs-toolsNav__menuitem--link').contains('Gradebook').click()
+    
             cy.server()
             // DOM is being modified by Wicket so wait for the POST to complete
             cy.route('POST', '/portal/site/*/tool/*/settings?1-1.IBehaviorListener.0-form-categoryPanel-settingsCategoriesPanel-categoriesWrap-addCategory').as('addCat')
