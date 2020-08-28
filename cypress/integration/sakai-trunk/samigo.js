@@ -96,6 +96,9 @@ describe('Samigo', function () {
 
     context('Create a Pool', function () {
         it('can add and edit question pools', function () {
+            cy.sakaiLogin(instructor)
+            cy.visit(sakaiUrl)
+            cy.get('.Mrphs-toolsNav__menuitem--link').contains('Tests').click()
             const uuid = Cypress._.random(0, 1e6)
 
             // Create a new pool
