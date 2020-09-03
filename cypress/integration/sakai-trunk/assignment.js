@@ -1,7 +1,8 @@
 
 describe('Assignments', function () {
     const instructor = 'instructor1'
-    const student = 'student0011'
+    const student11 = 'student0011'
+    const student12 = 'student0012'
     const assignTitle = 'Cypress Assignment'
     let sakaiUrl
 
@@ -28,24 +29,31 @@ describe('Assignments', function () {
             // Add a title
             cy.get('#new_assignment_title').type(assignTitle)
 
+            // Honor pledge
+            cy.get('#new_assignment_check_add_honor_pledge').click()
+
+            // Attempt to save it without instructions
+            cy.get('div.act input.active').first().click()
+
+            // Should be an alert at top
+            cy.get('#generalAlert').should('contain', 'Alert')
+
             // Type into the ckeditor instructions field
             cy.type_ckeditor("new_assignment_instructions", 
                 "<p>What is chiefly responsible for the increase in the average length of life in the USA during the last fifty years?</p>");
 
-            // Honor pledge
-            cy.get('#new_assignment_check_add_honor_pledge').click()
-
-            // Save it
+            // Attempt to save it with instructions
             cy.get('div.act input.active').first().click()
 
-            // Now edit
+            // Now edit assignment
             cy.get('.itemAction').contains('Edit').click()
             cy.get('#new_assignment_check_add_honor_pledge').click()
             cy.get('div.act input.active').first().click();
         })
 
-        it('can login as student', function() {
-            cy.sakaiLogin(student)
+        it('can submit as student on desktop', function() {
+            cy.viewport('macbook-13') 
+            cy.sakaiLogin(student11)
             cy.visit(sakaiUrl)
             cy.get('.Mrphs-toolsNav__menuitem--link').contains('Assignments').click()
 
@@ -59,7 +67,25 @@ describe('Assignments', function () {
 
             // Final submit
             cy.get('div.act input.active').first().click()
+        })
 
+        it('can submit as student on iphone', function() {
+            cy.viewport('iphone-x') 
+            cy.sakaiLogin(student12)
+            cy.visit(sakaiUrl)
+            cy.get('.Mrphs-skipNav__menuitem--tools > .Mrphs-skipNav__link').click()
+            cy.get('.Mrphs-toolsNav__menuitem--link').contains('Assignments').click()
+
+            cy.get('a').contains(assignTitle).click()
+
+            // Honor Pledge?
+            cy.get('input[type="submit"]').contains('Agree').click()
+
+            cy.type_ckeditor('Assignment.view_submission_text', '<p>This is my submission text</p>')
+            cy.get('div.act input.active').first().click()
+
+            // Final submit
+            cy.get('div.act input.active').first().click()
         })
 
     })
