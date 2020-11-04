@@ -61,7 +61,7 @@ describe('Rubrics', () => {
       createRubric();
       // We don't want to bother saving the title.
       cy.get("div.rubric-edit-popover .cancel:visible").click();
-      cy.get(".rubric-title span.clone:visible").last().click();
+      cy.get(".rubric-title a.clone:visible").last().click();
       cy.get("button.save:visible").click();
       cy.get('a.rubric-name').last().should("contain", "New Rubric Copy");
     });
@@ -71,7 +71,7 @@ describe('Rubrics', () => {
       createRubric();
       // We don't want to bother saving the title.
       cy.get("div.rubric-edit-popover .cancel:visible").click();
-      cy.get(".criterion-row span.clone:visible").last().click();
+      cy.get(".criterion-row a.clone:visible").last().click();
       cy.get("button.save:visible").click();
       cy.get('h4.criterion-title').last().should("contain", "Criterion 2 Copy");
       cy.get('h4.criterion-title').its("length") === 3;
