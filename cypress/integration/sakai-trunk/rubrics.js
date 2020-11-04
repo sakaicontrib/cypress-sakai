@@ -63,7 +63,7 @@ describe('Rubrics', () => {
       cy.get("div.rubric-edit-popover .cancel:visible").click();
       cy.get(".rubric-title span.clone:visible").last().click();
       cy.get("button.save:visible").click();
-      cy.get('a.rubric-name').last({timeout: 500}).should("contain", "New Rubric Copy");
+      cy.get('a.rubric-name').last().should("contain", "New Rubric Copy");
     });
 
     it('can copy a criterion', () => {
@@ -73,7 +73,7 @@ describe('Rubrics', () => {
       cy.get("div.rubric-edit-popover .cancel:visible").click();
       cy.get(".criterion-row span.clone:visible").last().click();
       cy.get("button.save:visible").click();
-      cy.get('h4.criterion-title').last({timeout: 500}).should("contain", "Criterion 2 Copy");
+      cy.get('h4.criterion-title').last().should("contain", "Criterion 2 Copy");
       cy.get('h4.criterion-title').its("length") === 3;
     });
   })
