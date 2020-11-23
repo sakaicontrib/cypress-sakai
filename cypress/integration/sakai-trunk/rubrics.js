@@ -4,29 +4,20 @@ describe('Rubrics', () => {
   const student11 = 'student0011';
   const student12 = 'student0012';
   const rubricTitle = 'Cypress Rubric';
+  const assignTitle = 'Cypress Assignment';
   let sakaiUrl;
-
-  const createRubric = () => {
-
-    cy.sakaiLogin(instructor);
-    cy.visit(sakaiUrl);
-    cy.get('.Mrphs-toolsNav__menuitem--link').contains('Rubrics').click();
-
-    // Create new rubric
-    cy.get('.add-rubric').click();
-  };
 
   context('Create a new Rubric', () => {
 
     it ('can create a new course', () => {
 
       cy.sakaiLogin(instructor);
-      cy.sakaiCreateCourse(instructor, "sakai\\.rubrics").then(url => sakaiUrl = url);
+      cy.sakaiCreateCourse(instructor, ["sakai\\.rubrics"]).then(url => sakaiUrl = url);
     });
 
     it('can create a rubric and set the title', () => {
 
-      createRubric();
+      cy.createRubric(instructor, sakaiUrl);
 
       // Set the title and save it
       cy.get('#rubric_title_edit').type(rubricTitle);
@@ -38,7 +29,7 @@ describe('Rubrics', () => {
 
     it('can create a rubric and then add a criterion', () => {
 
-      createRubric();
+      cy.createRubric(instructor, sakaiUrl);
       // We don't want to bother saving the title.
       cy.get("div.rubric-edit-popover .cancel:visible").click();
       cy.get(".add-criterion:visible").click();
@@ -48,7 +39,7 @@ describe('Rubrics', () => {
 
     it('can delete a rubric', () => {
 
-      createRubric();
+      cy.createRubric(instructor, sakaiUrl);
       // We don't want to bother saving the title.
       cy.get("div.rubric-edit-popover .cancel:visible").click();
       cy.get("sakai-item-delete.sakai-rubric").last().click();
@@ -58,7 +49,7 @@ describe('Rubrics', () => {
 
     it('can copy a rubric', () => {
 
-      createRubric();
+      cy.createRubric(instructor, sakaiUrl);
       // We don't want to bother saving the title.
       cy.get("div.rubric-edit-popover .cancel:visible").click();
       cy.get(".rubric-title a.clone:visible").last().click();
@@ -68,7 +59,7 @@ describe('Rubrics', () => {
 
     it('can copy a criterion', () => {
 
-      createRubric();
+      cy.createRubric(instructor, sakaiUrl);
       // We don't want to bother saving the title.
       cy.get("div.rubric-edit-popover .cancel:visible").click();
       cy.get(".criterion-row a.clone:visible").last().click();
