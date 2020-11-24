@@ -1,66 +1,61 @@
+describe('Gradebook', () => {
 
-describe('Gradebook', function () {
-    const instructor = 'instructor1'
-    let sakaiUrl
+  const instructor = 'instructor1';
+  let sakaiUrl;
 
-    context('Create site and add gradebook', function () {
+  context('Create site and add gradebook', () => {
 
-        before(function () {
-        })
+    it ('can create a new course', () => {
 
+      cy.sakaiLogin(instructor);
+      cy.sakaiCreateCourse(instructor, ["sakai\\.gradebookng"]).then(
+        returnUrl => sakaiUrl = returnUrl
+      );
+    });
 
-        it ('can create a new course', function() {
-            cy.sakaiLogin(instructor)
-            cy.sakaiCreateCourse(instructor, "sakai\\.gradebookng").then(
-                returnUrl => sakaiUrl = returnUrl
-            )
-        })
+    it('Create categories and items', () => {
 
-        it('Create categories and items', function() {
-            cy.sakaiLogin(instructor)
-            cy.visit(sakaiUrl)
-            cy.get('.Mrphs-toolsNav__menuitem--link').contains('Gradebook').click()
-    
-            cy.server()
-            // DOM is being modified by Wicket so wait for the POST to complete
-            cy.route('POST', '/portal/site/*/tool/*/settings?1-1.IBehaviorListener.0-form-categoryPanel-settingsCategoriesPanel-categoriesWrap-addCategory').as('addCat')
+      cy.sakaiLogin(instructor);
+      cy.visit(sakaiUrl);
+      cy.get('.Mrphs-toolsNav__menuitem--link').contains('Gradebook').click();
 
-            // We want to use categories
-            cy.get('a[title="Settings"]').click({ force: true})
-            cy.get('a').contains('Categories').click()
-            cy.get('input[type="radio"]').last().click()
-            cy.get('.gb-category-row input[name$="name"]').first().type('A')
-            cy.get('.gb-category-weight input[name$="weight"]').first().clear().type('10')
-            cy.get('#settingsCategories button').contains('Add a category').click()
-            cy.wait('@addCat')
-            cy.get('.gb-category-row input[name$="name"]').eq(1).type('B')
-            cy.get('.gb-category-weight input[name$="weight"]').eq(1).clear().type('35')
-            cy.get('#settingsCategories button').contains('Add a category').click()
-            cy.wait('@addCat')
-            cy.get('.gb-category-row input[name$="name"]').eq(2).type('C')
-            cy.get('.gb-category-weight input[name$="weight"]').eq(2).clear().type('10')
-            cy.get('#settingsCategories button').contains('Add a category').click()
-            cy.wait('@addCat')
-            cy.get('.gb-category-row input[name$="name"]').eq(3).type('D')
-            cy.get('.gb-category-weight input[name$="weight"]').eq(3).clear().type('15')
-            cy.get('#settingsCategories button').contains('Add a category').click()
-            cy.wait('@addCat')
-            cy.get('.gb-category-row input[name$="name"]').eq(4).type('E')
-            cy.get('.gb-category-weight input[name$="weight"]').eq(4).clear().type('30')
-            cy.get('.act input[type="button"]').should('have.class', 'active').click()
+      cy.server();
+      // DOM is being modified by Wicket so wait for the POST to complete
+      cy.route('POST', '/portal/site/*/tool/*/settings?1-1.IBehaviorListener.0-form-categoryPanel-settingsCategoriesPanel-categoriesWrap-addCategory').as('addCat');
 
-            // Now create the gb items
-            cy.reload()
-            cy.get('input[name="cancel"]').click()
+      const cats = [
+        {letter: "A", percent: 10},
+        {letter: "B", percent: 35},
+        {letter: "C", percent: 10},
+        {letter: "D", percent: 15},
+        {letter: "E", percent: 30},
+      ];
 
-/*             for (let i = 0; i < 5; i++) {
-                cy.get('button').contains('Add Gradebook Item').click()
-                cy.get('.wicket-modal input[name$="title"]').type(1 + i)
-                cy.get('.wicket-modal input[name$="points"]').type(100)
-                cy.get('.wicket-modal select[name$="category"] > option').eq(1 + i).then(element => cy.get('.wicket-modal select[name$="category"]').select(element.val()))
-                cy.get('.wicket-modal button[name$="submit"]').click()
-                cy.wait(200)
-            } */
-        })
-    })
-})
+      // We want to use categories
+      cy.get('a[title="Settings"]').click();
+      cy.get('a').contains('Categories').click();
+      cy.get('input[type="radio"]').last().click();
+
+      cats.forEach((cat, i) => {
+        cy.get('.gb-category-row input[name$="name"]').eq(i).type(cats[i].letter);
+        cy.get('.gb-category-weight input[name$="weight"]').eq(i).clear().type(cats[i].percent);
+        cy.get('#settingsCategories button').contains('Add a category').click();
+        cy.wait('@addCat')
+      });
+      cy.get('.act input[type="button"]').should('have.class', 'active').click();
+
+      // Now create the gb items
+      cy.reload();
+      cy.get("a[title='Grades']").click();
+
+      cats.forEach((cat, i) => {
+        cy.get("button.gb-add-gradebook-item-button").click();
+        cy.get(".wicket-modal input[name$='title']").type(`Item ${i + 1}`);
+        cy.get(".wicket-modal input[name$='points']").type(100);
+        cy.get(".wicket-modal select[name$='category']").select(`${cat.letter} (${cat.percent}%)`);
+        cy.get(".wicket-modal button[name$='submit']").click();
+        cy.wait(200)
+      });
+    });
+  });
+});

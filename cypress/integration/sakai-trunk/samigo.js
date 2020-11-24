@@ -11,7 +11,7 @@ describe('Samigo', function () {
 
         it ('can create a new course', function() {
             cy.sakaiLogin(instructor)
-            cy.sakaiCreateCourse(instructor, "sakai\\.samigo").then(
+            cy.sakaiCreateCourse(instructor, ["sakai\\.samigo"]).then(
                 returnUrl => sakaiUrl = returnUrl
             )
         })

@@ -40,14 +40,15 @@ Cypress.Commands.add("type_ckeditor", (element, content) => {
   cy.window()
     .then(win => {
       if (win.CKEDITOR.instances[element]) {
-      win.CKEDITOR.instances[element].setData(content);
+        win.CKEDITOR.instances[element].setData(content);
       } else {
         win.CKEDITOR.instances[0].setData(content);
       }
+      cy.wait(200);
     });
 });
 
-Cypress.Commands.add('sakaiCreateCourse', (username, toolName) => {
+Cypress.Commands.add('sakaiCreateCourse', (username, toolNames) => {
   // Go to user Home and create new course site
   cy.visit('/portal/site/~' + username)
   cy.get('a').contains('Worksite Setup').click()
@@ -69,7 +70,7 @@ Cypress.Commands.add('sakaiCreateCourse', (username, toolName) => {
   cy.get('input#continueButton').click()
   cy.get('textarea').last().type('Cypress Testing')
   cy.get('.act input[name="continue"]').click()
-  cy.get('input#' + toolName).check().should('be.checked')
+  toolNames.forEach(tn => cy.get(`input#${tn}`).check().should('be.checked'));
   cy.get('.act input[name="Continue"]').click()
   cy.get('input#continueButton').click()
   cy.get('input#addSite').click()
@@ -78,6 +79,17 @@ Cypress.Commands.add('sakaiCreateCourse', (username, toolName) => {
     .should('have.attr', 'href').and('include', '/portal/site/')
     .then((href) => { return href })
 })
+
+Cypress.Commands.add("createRubric", (instructor, sakaiUrl) => {
+
+  cy.sakaiLogin(instructor);
+  cy.visit(sakaiUrl);
+  cy.get('.Mrphs-toolsNav__menuitem--link').contains('Rubrics').click();
+
+  // Create new rubric
+  cy.get('.add-rubric').click();
+});
+
 //
 //
 // -- This is a child command --
