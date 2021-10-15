@@ -36,6 +36,9 @@ describe('Assignments', function () {
           // Honor pledge
           cy.get('#new_assignment_check_add_honor_pledge').click();
 
+          // Need to set points
+          cy.get("#new_assignment_grade_points").type("100");
+
           // Attempt to save it without instructions
           cy.get('div.act input.active').first().click();
 
