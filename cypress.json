@@ -1,5 +1,5 @@
 {
-  "baseUrl": "http://127.0.0.1",
+  "baseUrl": "http://127.0.0.1:8080",
   "defaultCommandTimeout": 12000,
   "projectId": "2yx624"
 }
