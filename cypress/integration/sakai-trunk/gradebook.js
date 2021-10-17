@@ -48,14 +48,19 @@ describe('Gradebook', () => {
       cy.reload();
       cy.get("a[title='Grades']").click();
 
+/*
+      // DOM is being modified by Wicket so wait for the POST to complete
+      cy.route('POST', '/portal/site/*/tool/*/grades?0-1.IBehaviorListener.0-form-gradeTableArea-noAssignments-addGradeItem2').as('addGbItem');
+
       cats.forEach((cat, i) => {
         cy.get("button.gb-add-gradebook-item-button").click();
+        cy.wait('@addGbItem');
         cy.get(".wicket-modal input[name$='title']").type(`Item ${i + 1}`);
         cy.get(".wicket-modal input[name$='points']").type(100);
         cy.get(".wicket-modal select[name$='category']").select(`${cat.letter} (${cat.percent}%)`);
         cy.get(".wicket-modal button[name$='submit']").click();
-        cy.wait(200)
       });
+*/
     });
   });
 });
