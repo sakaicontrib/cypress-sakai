@@ -50,7 +50,7 @@ describe('Gradebook', () => {
 
 /*
       // DOM is being modified by Wicket so wait for the POST to complete
-      cy.route('POST', '/portal/site/*/tool/*/grades?0-1.IBehaviorListener.0-form-gradeTableArea-noAssignments-addGradeItem2').as('addGbItem');
+      cy.route('POST', '/\*grades?0-1.IBehaviorListener.0-form-gradeTableArea-noAssignments-addGradeItem2').as('addGbItem');
 
       cats.forEach((cat, i) => {
         cy.get("button.gb-add-gradebook-item-button").click();
