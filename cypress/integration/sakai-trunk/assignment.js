@@ -61,6 +61,7 @@ describe('Assignments', function () {
           cy.get('.Mrphs-toolsNav__menuitem--link').contains('Assignments').click()
           cy.get('.itemAction').contains('Edit').click()
 
+          // Save assignment with points and a rubric associated{
           cy.get("#gradeAssignment").click();
           cy.get("#new_assignment_grade_points").type("55");
           cy.get("input[name='rbcs-associate'][value='1']").click();
@@ -69,8 +70,9 @@ describe('Assignments', function () {
           cy.server();
           // DOM is being modified. Loading rubrics.
           cy.route('GET', '/rubrics-service/rest/rubric-associations/search/*').as('loadRubrics');
-          cy.wait('@loadRubrics');
+          cy.wait('@loadRubrics', {timeout: 15000});
 
+          // Confirm rubric button
           cy.get("sakai-rubric-student-button").its("length") === 1;
         });
 
