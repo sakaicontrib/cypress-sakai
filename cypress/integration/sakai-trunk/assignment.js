@@ -56,6 +56,7 @@ describe('Assignments', function () {
         it("Can associate a rubric with an assignment", () =>{
 
           cy.createRubric(instructor, sakaiUrl);
+          cy.get("div.rubric-edit-popover").its("length") === 1;
           cy.get("div.rubric-edit-popover .save").click();
 
           cy.get('.Mrphs-toolsNav__menuitem--link').contains('Assignments').click()
