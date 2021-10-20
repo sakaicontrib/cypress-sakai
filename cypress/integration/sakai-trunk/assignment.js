@@ -64,7 +64,13 @@ describe('Assignments', function () {
           cy.get("#gradeAssignment").click();
           cy.get("#new_assignment_grade_points").type("55");
           cy.get("input[name='rbcs-associate'][value='1']").click();
-          cy.get('div.act input.active').first().click()
+          cy.get('div.act input.active').first().click();
+
+          cy.server();
+          // DOM is being modified. Loading rubrics.
+          cy.route('GET', '/rubrics-service/rest/rubric-associations/search/*').as('loadRubrics');
+          cy.wait('@loadRubrics');
+
           cy.get("sakai-rubric-student-button").its("length") === 1;
         });
 
