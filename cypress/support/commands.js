@@ -54,21 +54,14 @@ Cypress.Commands.add('iframeLoaded', { prevSubject: 'element' },
 })
 
 Cypress.Commands.add("type_ckeditor", (element, content) => {
-    cy.get('iframe.cke_wysiwyg_frame')  // "cke_wysiwyg_frame" class is used here
+    cy.window()
+      .then(win => {
+        win.CKEDITOR.instances[element].setData(content);
+      });
+
+    cy.get('#cke_' + element.replace(/\./g, '\\.') + ' iframe.cke_wysiwyg_frame')  // "cke_wysiwyg_frame" class is used here
       .iframeLoaded()                   // wait for the iframe to be loaded
       .then($frameWindow => {
-
-        const win = cy.state('window'); // grab the window Cypress is testing
-        const ckEditor = win.CKEDITOR;  // CKEditor has added itself to the window
-        const instances = ckEditor.instances;  // can be multiple editors on the page
-
-        //const myEditor = instances[element] ? instances[element] : instances[0];
-
-        // use CKEditor API to change the text
-        for (const myEd of instances) {
-          myEd.setData(content);
-        }
-
         // Verify
         cy.wrap($frameWindow)
           .its('document')
@@ -76,7 +69,7 @@ Cypress.Commands.add("type_ckeditor", (element, content) => {
           .invoke('html')
           .should('contain', content)
 
-    })
+        })
 });
 
 Cypress.Commands.add('sakaiCreateCourse', (username, toolNames) => {
