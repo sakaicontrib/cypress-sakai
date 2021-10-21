@@ -62,17 +62,19 @@ Cypress.Commands.add("type_ckeditor", (element, content) => {
         const ckEditor = win.CKEDITOR;  // CKEditor has added itself to the window
         const instances = ckEditor.instances;  // can be multiple editors on the page
 
-        const myEditor = instances[element] ? instances[element] : instances[0];
+        //const myEditor = instances[element] ? instances[element] : instances[0];
 
         // use CKEditor API to change the text
-        myEditor.setData(content); 
+        for (const myEd of instances) {
+          myEd.setData(content);
+        }
 
         // Verify
         cy.wrap($frameWindow)
           .its('document')
           .its('body')
           .invoke('html')
-          .should('eq', content)
+          .should('contain', content)
 
     })
 });
