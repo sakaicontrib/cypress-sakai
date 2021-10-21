@@ -44,7 +44,7 @@ Cypress.Commands.add("type_ckeditor", (element, content) => {
       } else {
         win.CKEDITOR.instances[0].setData(content);
       }
-      cy.wait(200);
+      cy.wait(500);
     });
 });
 

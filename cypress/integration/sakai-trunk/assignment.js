@@ -7,18 +7,29 @@ describe('Assignments', function () {
     let sakaiUrl
 
     beforeEach(function() {
+      if (Cypress.env('SITE_URL')) {
+        sakaiUrl = Cypress.env('SITE_URL')
+      }
+    })
 
+    // Rubrics seems to have some issues with webcomponent and load order
+    Cypress.on('uncaught:exception', (err, runnable) => {
+      // returning false here prevents Cypress from failing the test
+      return false
     })
 
     context('Create a new Assignment', function () {
 
         it ('can create a new course', function() {
             cy.sakaiLogin(instructor)
-            cy.sakaiCreateCourse(instructor, [
-              "sakai\\.rubrics",
-              "sakai\\.assignment\\.grades",
-              "sakai\\.gradebookng"
-            ]).then(url => sakaiUrl = url);
+
+            if (sakaiUrl == null) {
+              cy.sakaiCreateCourse(instructor, [
+                "sakai\\.rubrics",
+                "sakai\\.assignment\\.grades",
+                "sakai\\.gradebookng"
+              ]).then(url => sakaiUrl = url);
+            }
         });
 
         it('can create an assignment', () => {
@@ -47,10 +58,13 @@ describe('Assignments', function () {
 
           // Type into the ckeditor instructions field
           cy.type_ckeditor("new_assignment_instructions", 
-              "<p>What is chiefly responsible for the increase in the average length of life in the USA during the last fifty years?</p>");
+              "<p>What is chiefly responsible for the increase in the average length of life in the USA during the last fifty years?</p>")
 
-          // Attempt to save it with instructions
+          // Save it with instructions
           cy.get('div.act input.active').first().click();
+
+          // Confirm it exists but cant graade it
+          cy.get("a").contains('View Submissions').its("length") === 1;
         });
 
         it("Can associate a rubric with an assignment", () =>{
@@ -66,14 +80,16 @@ describe('Assignments', function () {
           cy.get("#gradeAssignment").click();
           cy.get("#new_assignment_grade_points").type("55");
           cy.get("input[name='rbcs-associate'][value='1']").click();
-          cy.get('div.act input.active').first().click();
 
-          cy.server();
-          // DOM is being modified. Loading rubrics.
-          cy.route('GET', '/rubrics-service/rest/rubric-associations/search/*').as('loadRubrics');
-          cy.wait('@loadRubrics', {timeout: 15000});
+          // Again just to make sure editor loaded fully
+          cy.type_ckeditor("new_assignment_instructions", 
+              "<p>What is chiefly responsible for the increase in the average length of life in the USA during the last fifty years?</p>")
+
+          // Save
+          cy.get('.act input.active').first().click();
 
           // Confirm rubric button
+          cy.get("a").contains('Grade').its("length") === 1;
           cy.get("sakai-rubric-student-button").its("length") === 1;
         });
 
@@ -89,10 +105,15 @@ describe('Assignments', function () {
             cy.get('input[type="submit"]').contains('Agree').click()
 
             cy.type_ckeditor('Assignment.view_submission_text', '<p>This is my submission text</p>')
-            cy.get('div.act input.active').first().click()
+            cy.get('.act input.active').first().should('have.value', 'Proceed').click()
 
             // Final submit
-            cy.get('div.act input.active').first().click()
+            cy.get('.textPanel').contains('This is my submission text')
+            cy.get('.act input.active').should('have.value', 'Submit').click()
+
+            // Confirmation page
+            cy.get('h3').contains('Submission Confirm')
+            cy.get('.act input.active').should('have.value', 'Back to list').click()
         })
 
         it('can submit as student on iphone', function() {
@@ -108,10 +129,59 @@ describe('Assignments', function () {
             cy.get('input[type="submit"]').contains('Agree').click()
 
             cy.type_ckeditor('Assignment.view_submission_text', '<p>This is my submission text</p>')
-            cy.get('div.act input.active').first().click()
+            cy.get('.act input.active').first().should('have.value', 'Proceed').click()
 
             // Final submit
+            cy.get('.act input.active').first().should('have.value', 'Submit').click()
+
+            // Confirmation page
+            cy.get('h3').contains('Submission Confirm')
+            cy.get('.act input.active').should('have.value', 'Back to list').click()
+
+            // Try to submit again
+            cy.get('a').contains(assignTitle).click()
+            cy.get('.textPanel').contains('This is my submission text')
+            cy.get('form').contains('Back to list').click()
+        })
+
+        it('can can allow a student to resubmit', function() {
+            cy.sakaiLogin(instructor)
+            cy.visit(sakaiUrl)
+            cy.get('.Mrphs-toolsNav__menuitem--link').contains('Assignments').click()
+
+            cy.get('.itemAction a').contains('Grade').click()
+
+            cy.get('#submissionList a').contains(student12).click()
+
+            // Allow student12 to resubmit
+            cy.get('#grader-feedback-text').contains('This is my submission text')
+            cy.get('#score-grade-input').type('50')
+            cy.get('.resubmission-checkbox input').click()
+            cy.get('div.act button[name="return"]').click()
+        })
+
+        it('can resubmit as student on iphone', function() {
+            cy.viewport('iphone-x') 
+            cy.sakaiLogin(student12)
+            cy.visit(sakaiUrl)
+            cy.get('.Mrphs-skipNav__menuitem--tools > .Mrphs-skipNav__link').click()
+            cy.get('.Mrphs-toolsNav__menuitem--link').contains('Assignments').click()
+
+            cy.get('a').contains(assignTitle).click()
+
+            cy.get('h3').contains('Resubmission')
+            cy.wait(5000) // wait for ckeditor to load
+            cy.type_ckeditor('Assignment.view_submission_text', '<p>This is my re-submission text</p>')
             cy.get('div.act input.active').first().click()
+
+            // Final resubmit
+            cy.get('.act input.active').should('have.value', 'Resubmit').click()
+
+            // Confirm no more chances
+            cy.get('.act input.active').contains('Back to list').click()
+            cy.get('a').contains(assignTitle).click()
+            cy.get('.textPanel').contains('This is my re-submission text')
+            cy.get('form').contains('Back to list').click()
         })
     })
 });
