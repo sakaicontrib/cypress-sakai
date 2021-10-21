@@ -36,16 +36,45 @@ Cypress.Commands.add('sakaiUuid', () => {
   return Cypress._.toString(uuid);
 })
 
+Cypress.Commands.add('iframeLoaded', { prevSubject: 'element' },
+  ($iframe) => {
+    const contentWindow = $iframe.prop('contentWindow')
+    return new Promise(resolve => {
+        if (
+            contentWindow &&
+            contentWindow.document.readyState === 'complete'
+        ) {
+            resolve(contentWindow)
+        } else {
+            $iframe.on('load', () => {
+                resolve(contentWindow)
+            })
+        }
+    })
+})
+
 Cypress.Commands.add("type_ckeditor", (element, content) => {
-  cy.window()
-    .then(win => {
-      if (win.CKEDITOR.instances[element]) {
-        win.CKEDITOR.instances[element].setData(content);
-      } else {
-        win.CKEDITOR.instances[0].setData(content);
-      }
-      cy.wait(500);
-    });
+    cy.get('iframe.cke_wysiwyg_frame')  // "cke_wysiwyg_frame" class is used here
+      .iframeLoaded()                   // wait for the iframe to be loaded
+      .then($frameWindow => {
+
+        const win = cy.state('window'); // grab the window Cypress is testing
+        const ckEditor = win.CKEDITOR;  // CKEditor has added itself to the window
+        const instances = ckEditor.instances;  // can be multiple editors on the page
+
+        const myEditor = instances[element] ? instances[element] : instances[0];
+
+        // use CKEditor API to change the text
+        myEditor.setData(content); 
+
+        // Verify
+        cy.wrap($frameWindow)
+          .its('document')
+          .its('body')
+          .invoke('html')
+          .should('eq', content)
+
+    })
 });
 
 Cypress.Commands.add('sakaiCreateCourse', (username, toolNames) => {
