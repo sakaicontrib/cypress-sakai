@@ -57,10 +57,16 @@ Cypress.Commands.add("type_ckeditor", (element, content) => {
     cy.window()
       .then(win => {
         win.CKEDITOR.instances[element].setData(content);
+        for (let x = 0; x < 20; ++x) {
+          if (content != win.CKEDITOR.instances[element].getData()) {
+            cy.wait(500)
+            win.CKEDITOR.instances[element].setData(content)
+          }
+        }
       });
 
     cy.get('#cke_' + element.replace(/\./g, '\\.') + ' iframe.cke_wysiwyg_frame')  // "cke_wysiwyg_frame" class is used here
-      .iframeLoaded()                   // wait for the iframe to be loaded
+      .iframeLoaded()
       .then($frameWindow => {
         // Verify
         cy.wrap($frameWindow)
@@ -68,8 +74,7 @@ Cypress.Commands.add("type_ckeditor", (element, content) => {
           .its('body')
           .invoke('html')
           .should('contain', content)
-
-        })
+      })
 });
 
 Cypress.Commands.add('sakaiCreateCourse', (username, toolNames) => {
