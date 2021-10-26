@@ -7,9 +7,7 @@ describe('Assignments', function () {
     let sakaiUrl
 
     beforeEach(function() {
-      if (Cypress.env('SITE_URL')) {
-        sakaiUrl = Cypress.env('SITE_URL')
-      }
+      cy.intercept('POST', 'https://www.google-analytics.com/j/collect*', (req) => { req.destroy() }).as('googleanalytics')
     })
 
     // Rubrics seems to have some issues with webcomponent and load order
