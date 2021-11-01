@@ -70,6 +70,25 @@ describe('Samigo', function () {
             cy.get('input[type="submit"]').contains('Remove').click()
             cy.get('#assessmentForm\\:parts').find('.samigo-question-callout').should('have.length', 1)
 
+            // Add a calculated question
+            cy.get('#assessmentForm\\:parts\\:0\\:changeQType').select('Calculated Question')
+            cy.get('#itemForm\\:answerptr').clear().type('10.00')
+            cy.get('#itemForm textarea.simple_text_area').first()
+              .type('Kevin has {x} apples. He buys {y} more. Now Kevin has [[{x}+{y}]]. Jane eats {z} apples. Kevin now has {{w}} apples.',
+                { parseSpecialCharSequences: false }
+            )
+            cy.get('#itemForm input[type="submit"].active').first().click()
+            cy.get('#itemForm\\:pairs').find('input[type="text"]').should('have.length', 6)
+            cy.get('#itemForm\\:pairs input[type="text"]').eq(0).type('1')
+            cy.get('#itemForm\\:pairs input[type="text"]').eq(1).type('2')
+            cy.get('#itemForm\\:pairs input[type="text"]').eq(2).type('3')
+            cy.get('#itemForm\\:pairs input[type="text"]').eq(3).type('4')
+            cy.get('#itemForm\\:pairs input[type="text"]').eq(4).type('5')
+            cy.get('#itemForm\\:pairs input[type="text"]').eq(5).type('6')
+            cy.get('#itemForm\\:formulas textarea').first().type('{x} + {y} - {z}', { parseSpecialCharSequences: false })
+            cy.get('input[type="submit"].active').contains('Save').click()
+            cy.get('#assessmentForm\\:parts').find('.samigo-question-callout').should('have.length', 2)
+
             // Publish the quiz
             cy.get('a').contains('Settings').click()
             cy.get('body').then(($body) => {
@@ -88,7 +107,7 @@ describe('Samigo', function () {
             cy.get('#assessmentForm\\:parts\\:0\\:parts\\:0\\:modify').click()
             cy.get('#itemForm textarea').first().type('This is edited question text')
             cy.get('input[type="submit"]').contains('Save').click()
-            cy.get('#assessmentForm\\:parts').find('.samigo-question-callout').should('have.length', 1)
+            cy.get('#assessmentForm\\:parts').find('.samigo-question-callout').should('have.length', 2)
             cy.get('input[type="submit"]').contains('Republish').click()
             cy.get('input[type="submit"]').contains('Republish').click()
         })
