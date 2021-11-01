@@ -56,6 +56,7 @@ Cypress.Commands.add('iframeLoaded', { prevSubject: 'element' },
 Cypress.Commands.add("type_ckeditor", (element, content) => {
     cy.window()
       .then(win => {
+        cy.get('#cke_' + element.replace(/\./g, '\\.') + ' iframe.cke_wysiwyg_frame').its('0.contentWindow').should('exist')
         win.CKEDITOR.instances[element].setData(content);
         for (let x = 0; x < 20; ++x) {
           if (content != win.CKEDITOR.instances[element].getData()) {
