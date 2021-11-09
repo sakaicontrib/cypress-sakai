@@ -1,6 +1,8 @@
 
 describe('Samigo', function () {
     const instructor = 'instructor1'
+    const student11 = 'student0011'
+    const samigoTitle = 'Cypress Quiz'
     let sakaiUrl
 
     beforeEach(function() {
@@ -22,7 +24,7 @@ describe('Samigo', function () {
             cy.get('.Mrphs-toolsNav__menuitem--link').contains('Tests').click()
 
             cy.get('#authorIndexForm a').contains('Add').click()
-            cy.get('#authorIndexForm\\:title').type('Cypress Quiz')
+            cy.get('#authorIndexForm\\:title').type(samigoTitle)
             cy.get('#authorIndexForm\\:createnew').click()
 
             // Add a multiple choice question
@@ -145,6 +147,25 @@ describe('Samigo', function () {
             cy.get('#itemForm textarea').first().clear().type('Edited question text')
             cy.get('input[type="submit"]').contains('Save').click()
             cy.get('#editform\\:questionpool-questions').find('a[title="Edit Question"]').should('have.length', 1)
+        })
+
+        it('can take assessment as student on desktop', function() {
+            cy.viewport('macbook-13') 
+            cy.sakaiLogin(student11)
+            cy.visit(sakaiUrl)
+            cy.get('.Mrphs-toolsNav__menuitem--link').contains('Tests').click()
+
+            cy.get('#selectIndexForm\\:selectTable a').contains(samigoTitle).click()
+
+            cy.get('.sak-banner-info').contains('There is no time limit')
+            cy.get('input[type="submit"]').contains('Begin Assessment').should('be.disabled')
+            cy.get('#takeAssessmentForm\\:honor_pledge').click()
+            cy.get('input[type="submit"]').contains('Begin Assessment').click()
+
+            cy.get('.samigo-question-callout').contains('This is edited question text')
+            cy.get('input[type="radio"]').eq(0).click()
+            cy.get('input[type="submit"].active').contains('Next').click()
+
         })
 
     })
