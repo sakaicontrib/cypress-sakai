@@ -53,20 +53,21 @@ Cypress.Commands.add('iframeLoaded', { prevSubject: 'element' },
     })
 })
 
-function setCkeditorContent(elem, content)  {
-  elem.setData(content);
+function setCkeditorContent(element, content)  {
+  cy.get('#cke_' + element.replace(/\./g, '\\.') + ' iframe.cke_wysiwyg_frame')
+  cy.window().then (win => {
+    const ckeditorFilled = content == win.CKEDITOR.instances[element].getData()
+    if (!ckeditorFilled) {
+      win.CKEDITOR.instances[element].setData(content)
+      cy.log(element)
+      setCkeditorContent(element, content)
+    }
+
+  })
 }
 
 Cypress.Commands.add("type_ckeditor", (element, content) => {
-    cy.window()
-      .then(win => {
-        cy.get('#cke_' + element.replace(/\./g, '\\.') + ' iframe.cke_wysiwyg_frame').its('0.contentWindow').should('exist')
-          if (content != win.CKEDITOR.instances[element].getData()) {
-            cy.wait(1000)
-            setCkeditorContent(win.CKEDITOR.instances[element], content)
-            cy.log(win.CKEDITOR.instances[element])
-          }
-      });
+    setCkeditorContent(element, content)
 
     cy.get('#cke_' + element.replace(/\./g, '\\.') + ' iframe.cke_wysiwyg_frame')  // "cke_wysiwyg_frame" class is used here
       .iframeLoaded()
