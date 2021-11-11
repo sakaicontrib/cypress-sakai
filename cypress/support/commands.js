@@ -63,6 +63,10 @@ Cypress.Commands.add("typetype", (win, element, content) => {
 })
 
 Cypress.Commands.add("type_ckeditor", (element, content) => {
+  // Wait for the Source button to load in the editor before proceeding
+  cy.get('#cke_' + element.replace(/\./g, '\\.')).find('a.cke_button__source').click()
+  
+  // Try to handle the async nature of the setData call
   cy.wrap(element).window().then( (win) => 
     cy.typetype(win, element, content).then(resp => cy.log(resp))
   )
