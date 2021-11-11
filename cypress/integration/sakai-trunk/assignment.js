@@ -149,6 +149,9 @@ describe('Assignments', function () {
 
             cy.get('.itemAction a').contains('Grade').click()
 
+            // Make sure we are using new grader
+            cy.get('grader-toggle input[type="checkbox"]').check()
+
             cy.get('#submissionList a').contains(student12).click()
 
             // Allow student12 to resubmit
