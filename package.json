@@ -8,6 +8,7 @@
     "cypress-axe": "^0.13.0"
   },
   "devDependencies": {
+    "cypress-plugin-tab": "^1.0.5",
     "eslint": "^6.8.0",
     "eslint-plugin-cypress": "^2.12.1"
   },
