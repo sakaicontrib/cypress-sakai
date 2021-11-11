@@ -53,32 +53,19 @@ Cypress.Commands.add('iframeLoaded', { prevSubject: 'element' },
     })
 })
 
-function setCkeditorContent(element, content)  {
-  cy.get('#cke_' + element.replace(/\./g, '\\.') + ' iframe.cke_wysiwyg_frame')
-  cy.window().then (win => {
-    const ckeditorFilled = content == win.CKEDITOR.instances[element].getData()
-    if (!ckeditorFilled) {
-      win.CKEDITOR.instances[element].setData(content)
-      cy.log(element)
-      setCkeditorContent(element, content)
+Cypress.Commands.add("typetype", (win, element, content) => {
+  // setData is async function
+  return win.CKEDITOR.instances[element].setData(content, {
+    callback: function() {
+      return 'done';
     }
-
   })
-}
+})
 
 Cypress.Commands.add("type_ckeditor", (element, content) => {
-    setCkeditorContent(element, content)
-
-    cy.get('#cke_' + element.replace(/\./g, '\\.') + ' iframe.cke_wysiwyg_frame')  // "cke_wysiwyg_frame" class is used here
-      .iframeLoaded()
-      .then($frameWindow => {
-        // Verify
-        cy.wrap($frameWindow)
-          .its('document')
-          .its('body')
-          .invoke('html')
-          .should('contain', content)
-      })
+  cy.wrap(element).window().then( (win) => 
+    cy.typetype(win, element, content).then(resp => cy.log(resp))
+  )
 });
 
 Cypress.Commands.add('sakaiCreateCourse', (username, toolNames) => {
