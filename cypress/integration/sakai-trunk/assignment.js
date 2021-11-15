@@ -151,7 +151,6 @@ describe('Assignments', function () {
 
             // Make sure we are using new grader
             cy.get('grader-toggle').find('input[type="checkbox"]').check()
-            cy.get('grader-toggle').find('input[type="checkbox"]').should('be.checked')
 
             cy.get('#submissionList a').contains(student12).click()
 
