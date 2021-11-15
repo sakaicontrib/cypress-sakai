@@ -76,7 +76,7 @@ describe('Assignments', function () {
 
           // Save assignment with points and a rubric associated{
           cy.get("#gradeAssignment").click();
-          cy.get("#new_assignment_grade_points").type("55");
+          cy.get("#new_assignment_grade_points").type("55.13");
           cy.get("input[name='rbcs-associate'][value='1']").click();
 
           // Again just to make sure editor loaded fully
@@ -84,7 +84,7 @@ describe('Assignments', function () {
               "<p>What is chiefly responsible for the increase in the average length of life in the USA during the last fifty years?</p>")
 
           // Save
-          cy.get('.act input.active').first().click();
+          cy.get('.act input.active').first().click()
 
           // Confirm rubric button
           cy.get("a").contains('Grade').its("length") === 1;
@@ -150,15 +150,17 @@ describe('Assignments', function () {
             cy.get('.itemAction a').contains('Grade').click()
 
             // Make sure we are using new grader
+            cy.get('grader-toggle')
             cy.get('grader-toggle').find('input[type="checkbox"]').check()
+            cy.get('grader-toggle').find('input[type="checkbox"]').should('be.checked')
 
             cy.get('#submissionList a').contains(student12).click()
 
             // Allow student12 to resubmit
             cy.get('#grader-feedback-text').contains('This is my submission text')
-            cy.get('#score-grade-input').type('50')
+            cy.get('#score-grade-input').type('50.56')
             cy.get('.resubmission-checkbox input').click()
-            cy.get('div.act button[name="return"]').click()
+            cy.get('div.act button[name="return"]').click().pause()
         })
 
         it('can resubmit as student on iphone', function() {
