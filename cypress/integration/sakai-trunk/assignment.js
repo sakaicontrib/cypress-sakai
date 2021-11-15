@@ -61,8 +61,8 @@ describe('Assignments', function () {
           // Save it with instructions
           cy.get('div.act input.active').first().click();
 
-          // Confirm it exists but cant graade it
-          cy.get("a").contains('View Submissions').its("length") === 1;
+          // Confirm it exists but can't grade it
+          cy.get('a').contains('View Submissions').its('length') === 1
         });
 
         it("Can associate a rubric with an assignment", () =>{
@@ -89,6 +89,9 @@ describe('Assignments', function () {
           // Confirm rubric button
           cy.get("a").contains('Grade').its("length") === 1;
           cy.get("sakai-rubric-student-button").its("length") === 1;
+          
+          // Confirm score is present on instructor page
+          cy.get('td[headers="maxgrade"]').contains('55.13').its('length') === 1
         });
 
         it('can submit as student on desktop', function() {
@@ -160,7 +163,8 @@ describe('Assignments', function () {
             cy.get('#grader-feedback-text').contains('This is my submission text')
             cy.get('#score-grade-input').type('50.56')
             cy.get('.resubmission-checkbox input').click()
-            cy.get('div.act button[name="return"]').click().pause()
+            // Save and Release
+            cy.get('div.act button[name="return"]').click()
         })
 
         it('can resubmit as student on iphone', function() {
@@ -170,8 +174,13 @@ describe('Assignments', function () {
             cy.get('.Mrphs-skipNav__menuitem--tools > .Mrphs-skipNav__link').click()
             cy.get('.Mrphs-toolsNav__menuitem--link').contains('Assignments').click()
 
+            // Click into the assignment
             cy.get('a').contains(assignTitle).click()
 
+            // Confirm our score is present
+            cy.get('.itemSummaryValue').contains('50.56')
+
+            // Confirm we can re-submit as student
             cy.get('h3').contains('Resubmission')
             cy.wait(5000) // wait for ckeditor to load
             cy.type_ckeditor('Assignment.view_submission_text', '<p>This is my re-submission text</p>')
