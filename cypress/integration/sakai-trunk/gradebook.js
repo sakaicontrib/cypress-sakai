@@ -1,7 +1,15 @@
 describe('Gradebook', () => {
 
   const instructor = 'instructor1';
+  const student = 'student0011';
   let sakaiUrl;
+  const cats = [
+    {letter: "A", percent: 10},
+    {letter: "B", percent: 35},
+    {letter: "C", percent: 10},
+    {letter: "D", percent: 15},
+    {letter: "E", percent: 30},
+  ];
 
     beforeEach(function() {
       cy.intercept('POST', 'https://www.google-analytics.com/j/collect*', (req) => { req.destroy() }).as('googleanalytics')
@@ -16,15 +24,15 @@ describe('Gradebook', () => {
   context('Create site and add gradebook', () => {
 
     it ('can create a new course', () => {
-
       cy.sakaiLogin(instructor);
-      cy.sakaiCreateCourse(instructor, ["sakai\\.gradebookng"]).then(
-        returnUrl => sakaiUrl = returnUrl
-      );
+      if (sakaiUrl == null) {
+        cy.sakaiCreateCourse(instructor, ["sakai\\.gradebookng"]).then(
+          returnUrl => sakaiUrl = returnUrl
+        );
+      }
     });
 
-    it('Create categories and items', () => {
-
+    it('Can create gradebook categories', () => {
       cy.sakaiLogin(instructor);
       cy.visit(sakaiUrl);
       cy.get('.Mrphs-toolsNav__menuitem--link').contains('Gradebook').click();
@@ -32,14 +40,6 @@ describe('Gradebook', () => {
       cy.server();
       // DOM is being modified by Wicket so wait for the POST to complete
       cy.route('POST', '/portal/site/*/tool/*/settings?1-1.IBehaviorListener.0-form-categoryPanel-settingsCategoriesPanel-categoriesWrap-addCategory').as('addCat');
-
-      const cats = [
-        {letter: "A", percent: 10},
-        {letter: "B", percent: 35},
-        {letter: "C", percent: 10},
-        {letter: "D", percent: 15},
-        {letter: "E", percent: 30},
-      ];
 
       // We want to use categories
       cy.get('a[title="Settings"]').click();
@@ -52,11 +52,15 @@ describe('Gradebook', () => {
         cy.get('#settingsCategories button').contains('Add a category').click();
         cy.wait('@addCat')
       });
-      cy.get('.act input[type="button"]').should('have.class', 'active').click();
 
-      // Now create the gb items
-      cy.reload();
-      cy.get("a[title='Grades']").click();
+      // Save the category modifications
+      cy.get('.act input[type="button"]').should('have.class', 'active').click();
+    })
+
+    it('Can create gradebook items', () => {
+      cy.sakaiLogin(instructor);
+      cy.visit(sakaiUrl);
+      cy.get('.Mrphs-toolsNav__menuitem--link').contains('Gradebook').click();
 
       cats.forEach((cat, i) => {
         cy.get('.wicket-modal').should('not.exist');
@@ -70,5 +74,7 @@ describe('Gradebook', () => {
         cy.get(".messageSuccess").should('be.visible')
       });
     });
+
+  
   });
 });
