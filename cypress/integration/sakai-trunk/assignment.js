@@ -89,7 +89,7 @@ describe('Assignments', function () {
           // Confirm rubric button
           cy.get("a").contains('Grade').its("length") === 1;
           cy.get("sakai-rubric-student-button").its("length") === 1;
-          
+
           // Confirm score is present on instructor page
           cy.get('td[headers="maxgrade"]').contains('55.13').its('length') === 1
         });
@@ -153,10 +153,12 @@ describe('Assignments', function () {
             cy.get('.itemAction a').contains('Grade').click()
 
             // Make sure we are using new grader
+            /*
             cy.get('grader-toggle')
             cy.get('grader-toggle').find('input[type="checkbox"]').check()
             cy.get('grader-toggle').find('input[type="checkbox"]').should('be.checked')
-
+            */
+        
             cy.get('#submissionList a').contains(student12).click()
 
             // Allow student12 to resubmit
