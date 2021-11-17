@@ -73,7 +73,7 @@ Cypress.Commands.add("type_ckeditor", (element, content) => {
   cy.wrap(element).window().then( (win) => 
     cy.typetype(win, element, content).then(resp => cy.log(resp))
   )
-});
+})
 
 Cypress.Commands.add('sakaiCreateCourse', (username, toolNames) => {
   // Go to user Home and create new course site
@@ -115,6 +115,12 @@ Cypress.Commands.add("createRubric", (instructor, sakaiUrl) => {
 
   // Create new rubric
   cy.get('.add-rubric').click();
+})
+
+Cypress.Commands.add("checkForCriticalA11yIssues", () => {
+  cy.checkA11y(null, {
+    includedImpacts: ['critical']
+  })
 })
 
 Cypress.Commands.add("isNotInViewport", { prevSubject: true }, (element) => {
