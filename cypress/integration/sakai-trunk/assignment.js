@@ -30,7 +30,58 @@ describe('Assignments', function () {
             }
         });
 
-        it('can create an assignment', () => {
+        it('can create a letter grade assignment', () => {
+            cy.sakaiLogin(instructor);
+            cy.visit(sakaiUrl);
+            cy.get('.Mrphs-toolsNav__menuitem--link').contains('Assignments').click();
+  
+            // Create new assignment
+            cy.get('.navIntraTool a').contains('Add').click();
+  
+            // Add a title
+            cy.get('#new_assignment_title').type('Letter Grades');
+
+            cy.get('#new_assignment_grade_type').select('Letter grade');
+  
+            // Type into the ckeditor instructions field
+            cy.type_ckeditor("new_assignment_instructions", 
+                "<p>What is chiefly responsible for the increase in the average length of life in the USA during the last fifty years?</p>")
+    
+            // Save
+            cy.get('div.act input.active').first().click();
+
+            // Confirm can grade it with letters
+            cy.get('.itemAction a').last().click()
+            cy.wait(10000)
+            cy.get('grader-toggle input').check()
+            cy.get('#submissionList a').contains('student0011').click()
+            cy.get('#letter-grade-selector').select('B')
+            cy.get('.act .active').first().click()
+            cy.get('a').contains('Return to List').click()
+            cy.get('table#submissionList tr').eq(1).find('td[headers="grade"]').contains('B')
+            cy.get('.navIntraTool a').first().click()
+
+            // Now use the old grader
+            cy.get('.itemAction a').last().click()
+            cy.wait(10000)
+            cy.get('grader-toggle input').uncheck()
+            cy.get('#submissionList a').contains('student0011').click()
+            cy.get('select#grade option:selected').should('have.text', 'B')
+            cy.get('select#grade').select('C')
+            cy.get('.act input#save').click()
+            cy.get('input[name="cancelgradesubmission1"]').click()
+            cy.get('table#submissionList tr').eq(1).find('td[headers="grade"]').contains('C')
+            cy.get('.navIntraTool a').first().click()
+
+            // Now remove it
+            cy.get('input#check_1').check()
+            cy.get('input#btnRemove').click()
+            cy.get('div').contains('Are you sure you want to delete')
+            cy.get('input#delete').click()
+
+        });
+
+        it('can create a points assignment', () => {
 
           cy.sakaiLogin(instructor);
           cy.visit(sakaiUrl);
@@ -46,7 +97,7 @@ describe('Assignments', function () {
           cy.get('#new_assignment_check_add_honor_pledge').click();
 
           // Need to unset grading
-          cy.get("#gradeAssignment").click();
+          cy.get("#gradeAssignment").uncheck();
 
           // Attempt to save it without instructions
           cy.get('div.act input.active').first().click();
@@ -197,5 +248,6 @@ describe('Assignments', function () {
             cy.get('.textPanel').contains('This is my re-submission text')
             cy.get('form').contains('Back to list').click()
         })
+  
     })
 });
