@@ -29,7 +29,16 @@ Cypress.Commands.add('sakaiLogin', (username) => {
     expect(resp.status).to.eq(302)
   })
 
+  // Should be exactly one cookie here even if using Google Analytics
   cy.getCookies().should('have.length', 1)
+
+  // Need to clear the tutorial so it doesn't overlap on tests
+  cy.request({
+    url: '/portal/',
+    followRedirect: false,
+  }).then((resp) => {
+    expect(resp.status).to.eq(200)
+  })
 });
 
 Cypress.Commands.add('sakaiUuid', () => {
