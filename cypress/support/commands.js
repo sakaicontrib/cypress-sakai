@@ -16,15 +16,20 @@ Cypress.Commands.add('sakaiLogin', (username) => {
     message: `${username}`,
   })
 
-  return cy.request({
+  cy.request({
     method: 'POST',
     url: '/portal/xlogin',
     form: true,
+    followRedirect: false,
     body: {
       eid: username,
       pw: (username === 'admin' ? 'admin' : 'sakai'),
     },
+  }).then((resp) => {
+    expect(resp.status).to.eq(302)
   })
+
+  cy.getCookies().should('have.length', 1)
 });
 
 Cypress.Commands.add('sakaiUuid', () => {
