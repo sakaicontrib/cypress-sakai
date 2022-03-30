@@ -235,7 +235,7 @@ describe('Assignments', function () {
             cy.get('div.act input.active').first().click()
 
             // Final resubmit
-            cy.get('.act input.active').should('have.value', 'Resubmit').click()
+            cy.get('.act input.active').should('have.value', 'Submit').click()
 
             // Confirm no more chances
             cy.get('.act input.active').contains('Back to list').click()
