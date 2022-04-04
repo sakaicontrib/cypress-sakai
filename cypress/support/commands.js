@@ -16,6 +16,14 @@ Cypress.Commands.add('sakaiLogin', (username) => {
     message: `${username}`,
   })
 
+  // Go to the login page first
+  cy.request({
+    url: '/portal/xlogin',
+    followRedirect: false,
+  }).then((resp) => {
+    expect(resp.status).to.eq(200)
+  })
+
   cy.request({
     method: 'POST',
     url: '/portal/xlogin',
