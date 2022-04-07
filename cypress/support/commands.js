@@ -141,7 +141,7 @@ Cypress.Commands.add("createRubric", (instructor, sakaiUrl) => {
 
 Cypress.Commands.add("checkForCriticalA11yIssues", () => {
   cy.checkA11y(null, {
-    includedImpacts: ['critical']
+    includedImpacts: ['serious']
   })
 })
 
