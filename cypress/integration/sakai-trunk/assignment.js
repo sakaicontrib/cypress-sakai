@@ -241,7 +241,7 @@ describe('Assignments', function () {
             cy.get('.act input.active').contains('Back to list').click()
             cy.get('a').contains(assignTitle).click()
             cy.get('.textPanel').contains('This is my re-submission text')
-            cy.get('.act input.active').should('not.exist)
+            cy.get('.act input.active').should('not.exist')
         })
   
     })
