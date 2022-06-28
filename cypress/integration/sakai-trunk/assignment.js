@@ -57,7 +57,7 @@ describe('Assignments', function () {
             cy.get('#submissionList a').contains('student0011').click()
             cy.get('#letter-grade-selector').select('B')
             cy.get('.act .active').first().click()
-            cy.get('a').contains('Return to List').click()
+            cy.get('button').contains('Return to List').click()
             cy.get('table#submissionList tr').eq(1).find('td[headers="grade"]').contains('B')
             cy.get('.navIntraTool a').first().click()
 
@@ -241,7 +241,7 @@ describe('Assignments', function () {
             cy.get('.act input.active').contains('Back to list').click()
             cy.get('a').contains(assignTitle).click()
             cy.get('.textPanel').contains('This is my re-submission text')
-            cy.get('form').contains('Back to list').click()
+            cy.get('.act input.active').should('not.exist)
         })
   
     })
