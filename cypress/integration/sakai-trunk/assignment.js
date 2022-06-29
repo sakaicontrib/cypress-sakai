@@ -236,12 +236,6 @@ describe('Assignments', function () {
 
             // Final resubmit
             cy.get('.act input.active').should('have.value', 'Submit').click()
-
-            // Confirm no more chances
-            cy.get('.act input.active').contains('Back to list').click()
-            cy.get('a').contains(assignTitle).click()
-            cy.get('.textPanel').contains('This is my re-submission text')
-            cy.get('.act input.active').should('not.exist')
         })
   
     })
