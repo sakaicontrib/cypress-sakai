@@ -100,7 +100,7 @@ Cypress.Commands.add("type_ckeditor", (element, content) => {
 Cypress.Commands.add('sakaiCreateCourse', (username, toolNames) => {
   // Go to user Home and create new course site
   cy.visit('/portal/site/~' + username)
-  cy.get('a').contains('Worksite Setup').click()
+  cy.get('a').contains('Worksite Setup').click({ force: true })
   cy.get('a').contains('Create New Site').click({ force: true })
   cy.get('input#course').click()
   cy.get('select > option').eq(1).then(element => cy.get('select').select(element.val()))

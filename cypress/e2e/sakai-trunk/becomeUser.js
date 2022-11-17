@@ -10,16 +10,16 @@ describe('Become User', function () {
 
         it('Administration Workspace - Become User', function () {
             cy.visit('/portal/site/!admin')
-            cy.get('.is-selected > .link-container > span').should('contain', 'Administration')
-            cy.get('a.Mrphs-toolsNav__menuitem--link').contains('Become User').click()
+            cy.get('.btn-site > span').should('contain', 'Administration')
+            cy.get('a.btn-nav').contains('Become User').click()
             cy.get('#su\\:username').type('instructor1{enter}')
             cy.visit('/portal/site/!admin')
-            cy.get('.Mrphs-breadcrumb--toolNameText').contains('Site Unavailable')
-            cy.get('#loginUser a').click()
-            cy.get('#loginLinks a').contains('Return to').click()
+            cy.get('.btn-site > span').contains('Site Unavailable')
+            cy.get('a.sak-sysInd-account').click()
+            cy.get('a#loginLink1').contains('Return to').click()
             cy.visit('/portal/site/!admin')
-            cy.get('.Mrphs-breadcrumb--toolNameText').should('not.contain', 'Site Unavailable')
-            cy.get('a.Mrphs-toolsNav__menuitem--link').contains('Become User')
+            cy.get('.btn-site > span').should('not.contain', 'Site Unavailable')
+            cy.get('a.btn-nav').contains('Become User')
         })
     })
 });
