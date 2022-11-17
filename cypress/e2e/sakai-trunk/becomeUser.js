@@ -11,7 +11,7 @@ describe('Become User', function () {
         it('Administration Workspace - Become User', function () {
             cy.visit('/portal/site/!admin')
             cy.get('.btn-site > span').should('contain', 'Administration')
-            cy.get('a.btn-nav').contains('Become User').click()
+            cy.get('a.btn-nav').contains('Become User').click({ force: true })
             cy.get('#su\\:username').type('instructor1{enter}')
             cy.visit('/portal/site/!admin')
             cy.get('.btn-site > span').contains('Site Unavailable')
