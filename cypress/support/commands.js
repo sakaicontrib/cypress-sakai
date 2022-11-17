@@ -157,8 +157,8 @@ Cypress.Commands.add("isNotInViewport", { prevSubject: true }, (element) => {
       expect(rect.bottom).to.be.greaterThan(bottom, message);
     }
     else {
-      expect(rect.top).to.be.lte(0, message);
-      expect(rect.bottom).to.be.lte(0, message);
+      expect(rect.top).to.be.lte(30, message);
+      expect(rect.bottom).to.be.lte(30, message);
     }
   });
 });

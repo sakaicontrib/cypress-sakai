@@ -13,28 +13,28 @@ describe('Accessibility', function () {
     context('Login and use jump to content', function () {
 
         it ('can jump to new content via keyboard only', () => {
-            cy.get('.Mrphs-skipNav__menu a[href="#tocontent"]').isNotInViewport()
+            cy.get('.portal-jump-links a[href="#tocontent"]').isNotInViewport()
             cy.get('body').tab().focus()
             cy.focused().should('have.attr', 'title').and('eq', 'jump to content')
-            cy.get('.Mrphs-skipNav__menu a').contains('jump to content')
+            cy.get('.portal-jump-links a').contains('jump to content')
             cy.checkForCriticalA11yIssues()
         })
 
         it('has no detectable a11y violations on View All Sites', () => {
             // This allSites popout has many difficult a11y issues
-            cy.get('#viewAllSites').click()
-            cy.get('#allSites').contains('View All Sites').should('be.visible')
+            cy.get('#sakai-system-indicators button').click()
+            cy.get('#select-site-modal').contains('All My Sites').should('be.visible')
             cy.checkForCriticalA11yIssues()
             cy.get('body').type('{esc}')
-            cy.get('#allSites').isNotInViewport()
+            cy.get('#select-site-modal').isNotInViewport()
         })
 
         it('has no a11y violations from Profile popout', () => {
-            cy.get('#loginUser').click()
-            cy.get('.Mrphs-userNav__subnav').find('a').contains('My Connections').isInViewport()
+            cy.get('a.sak-sysInd-account').click()
+            cy.get('.nav-item').find('a').contains('View Profile').isInViewport()
             cy.checkForCriticalA11yIssues()
             cy.get('body').type('{esc}')
-            cy.get('.Mrphs-userNav__subnav').find('a').contains('My Connections').isNotInViewport()
+            cy.get('.nav-item').find('a').contains('View Profile').isNotInViewport()
         })
 
     })

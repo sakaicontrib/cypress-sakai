@@ -172,7 +172,7 @@ describe('Assignments', function () {
             cy.viewport('iphone-x') 
             cy.sakaiLogin(student12)
             cy.visit(sakaiUrl)
-            cy.get('.Mrphs-skipNav__menuitem--tools > .Mrphs-skipNav__link').click()
+            cy.get('.portal-jump-linksitem--tools > .Mrphs-skipNav__link').click()
             cy.get('.Mrphs-toolsNav__menuitem--link').contains('Assignments').click()
 
             cy.get('a').contains(assignTitle).click()
@@ -219,7 +219,7 @@ describe('Assignments', function () {
             cy.viewport('iphone-x') 
             cy.sakaiLogin(student12)
             cy.visit(sakaiUrl)
-            cy.get('.Mrphs-skipNav__menuitem--tools > .Mrphs-skipNav__link').click()
+            cy.get('.portal-jump-linksitem--tools > .Mrphs-skipNav__link').click()
             cy.get('.Mrphs-toolsNav__menuitem--link').contains('Assignments').click()
 
             // Click into the assignment
