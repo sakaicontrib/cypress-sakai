@@ -10,9 +10,9 @@ describe('Logging In - Instructor', function () {
       // in else we are redirected to /unauthorized
       cy.visit('/portal/site/!admin')
       cy.injectAxe()
-      cy.get('h1').should(
+      cy.get('h2').should(
         'contain',
-        'Login Required'
+        'Log in'
       )
     })
   })
@@ -43,7 +43,6 @@ describe('Logging In - Instructor', function () {
 
       // we should be redirected to /portal
       cy.url().should('include', '/portal')
-      cy.get('.Mrphs-userNav__subnav').should('contain', username)
 
       // and our cookie should be set to SAKAIID
       cy.getCookie('SAKAIID').should('exist')
@@ -87,11 +86,11 @@ describe('Logging In - Instructor', function () {
       // after cy.request, the session cookie has been set
       // and we can visit a protected page
       cy.visit('/portal/')
-      cy.get('.Mrphs-userNav__subnav').should('contain', username)
+      cy.get('.sites-section-heading').should('contain', 'Current site')
 
       // or another protected page
       cy.visit('/portal/site/~' + username)
-      cy.get('.Mrphs-toolsNav__menuitem--title').should('contain', 'Preferences')
+      cy.get('#site-current-pages').should('contain', 'Preferences')
     })
 
   })

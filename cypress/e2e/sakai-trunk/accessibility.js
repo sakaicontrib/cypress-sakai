@@ -22,7 +22,7 @@ describe('Accessibility', function () {
 
         it('has no detectable a11y violations on View All Sites', () => {
             // This allSites popout has many difficult a11y issues
-            cy.get('#sakai-system-indicators button').click()
+            cy.get('#sakai-system-indicators button').last().click()
             cy.get('#select-site-modal').contains('All My Sites').should('be.visible')
             cy.checkForCriticalA11yIssues()
             cy.get('body').type('{esc}')
