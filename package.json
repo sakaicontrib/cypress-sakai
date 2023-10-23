@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "description": "Cypress testing for Sakai",
   "dependencies": {
-    "axe-core": "^4.5.2",
+    "axe-core": "^4.8.2",
     "cypress": "^13.3.2",
-    "cypress-axe": "^1.0.0"
+    "cypress-axe": "^1.5.0"
   },
   "devDependencies": {
     "cypress-plugin-tab": "^1.0.5",
