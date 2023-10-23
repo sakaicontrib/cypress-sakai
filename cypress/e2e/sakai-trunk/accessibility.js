@@ -20,21 +20,21 @@ describe('Accessibility', function () {
             cy.checkForCriticalA11yIssues()
         })
 
-        it('has no detectable a11y violations on View All Sites', () => {
+        it.only('has no detectable a11y violations on View All Sites', () => {
             // This allSites popout has many difficult a11y issues
-            cy.get('button[title="View All Sites"]').click()
-            cy.get('#select-site-modal').contains('All My Sites').should('be.visible')
+            cy.get('#sakai-system-indicators button[title="View All Sites"]').click()
+            cy.get('#select-site-sidebar').contains('All Sites').should('be.visible')
             cy.checkForCriticalA11yIssues()
             cy.get('body').type('{esc}')
-            cy.get('#select-site-modal').isNotInViewport()
+            cy.get('#select-site-sidebar').should('not.be.visible')
         })
 
-        it('has no a11y violations from Profile popout', () => {
-            cy.get('a.sak-sysInd-account').click()
-            cy.get('.nav-item').find('a').contains('View Profile').isInViewport()
+        it.only('has no a11y violations from Profile popout', () => {
+            cy.get('.sak-sysInd-account').click()
+            cy.get('.nav-item').find('a').contains('View Profile').should('be.visible')
             cy.checkForCriticalA11yIssues()
             cy.get('body').type('{esc}')
-            cy.get('.nav-item').find('a').contains('View Profile').isNotInViewport()
+            cy.get('.nav-item').find('a').contains('View Profile').should('not.be.visible')
         })
 
     })

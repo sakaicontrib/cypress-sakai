@@ -103,7 +103,7 @@ Cypress.Commands.add('sakaiCreateCourse', (username, toolNames) => {
   cy.get('a').contains('Worksite Setup').click({ force: true })
   cy.get('a').contains('Create New Site').click({ force: true })
   cy.get('input#course').click()
-  cy.get('select > option').eq(1).then(element => cy.get('select').select(element.val()))
+  cy.get('select#selectTerm').select(1)
   cy.get('input#submitBuildOwn').click()
 
   // See if site has already been created
@@ -114,6 +114,8 @@ Cypress.Commands.add('sakaiCreateCourse', (username, toolNames) => {
     } else {
       cy.get('form[name="addCourseForm"] input[type="checkbox"]').first().click()
     }
+
+    cy.get('form input#courseDesc1').click()
   })
 
   cy.get('input#continueButton').click()
@@ -133,16 +135,14 @@ Cypress.Commands.add("createRubric", (instructor, sakaiUrl) => {
 
   cy.sakaiLogin(instructor);
   cy.visit(sakaiUrl);
-  cy.get('.Mrphs-toolsNav__menuitem--link').contains('Rubrics').click();
+  cy.get('.site-list-item-collapse.collapse.show a.btn-nav').contains('Rubrics').click();
 
   // Create new rubric
   cy.get('.add-rubric').click();
 })
 
 Cypress.Commands.add("checkForCriticalA11yIssues", () => {
-  cy.checkA11y(null, {
-    includedImpacts: ['minor']
-  })
+  cy.checkA11y(null, { includedImpacts: ['critical'] }, console.error)
 })
 
 Cypress.Commands.add("isNotInViewport", { prevSubject: true }, (element) => {

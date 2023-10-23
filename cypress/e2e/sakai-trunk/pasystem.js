@@ -10,10 +10,11 @@ describe('PA System', function () {
 
         it('Administration Workspace - PA System', function () {
             cy.visit('/portal/site/!admin')
-            cy.get('.is-selected > .link-container > span').should('contain', 'Administration')
-            cy.get('a.Mrphs-toolsNav__menuitem--link').contains('PA System').click()
+            cy.get('#header-site-title').should('contain', 'Administration')
+            cy.get('#pinned-site-admin-page-list a.btn-nav').contains('PA System').click()
             cy.get('a').contains('Create Banner').click()
-            cy.get('#message').type('This is a test')
+            cy.get('form input#message').click()
+              .type('This is a test')
             cy.get('#active').click()
             cy.get('input').contains('Save').click()
 
@@ -21,8 +22,11 @@ describe('PA System', function () {
             cy.get('.pasystem-banner-alerts').contains('This is a test')
 
             // Edit it
-            cy.get('a').contains('Edit').click()
-            cy.get('#message').type('This is a test -- 2')
+            cy.get('button').contains('Edit').click()
+            cy.get('form input#message').click()
+              .clear()
+              .type('This is a test -- 2')
+              .should('have.value', 'This is a test -- 2')
             cy.get('#active').click()
             cy.get('input').contains('Save').click()
 

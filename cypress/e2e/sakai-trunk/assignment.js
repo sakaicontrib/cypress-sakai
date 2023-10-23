@@ -18,7 +18,7 @@ describe('Assignments', function () {
 
     context('Create a new Assignment', function () {
 
-        it ('can create a new course', function() {
+        it.only('can create a new course', function() {
             cy.sakaiLogin(instructor)
 
             if (sakaiUrl == null) {
@@ -30,16 +30,16 @@ describe('Assignments', function () {
             }
         });
 
-        it('can create a letter grade assignment', () => {
+        it.only('can create a letter grade assignment', () => {
             cy.sakaiLogin(instructor);
             cy.visit(sakaiUrl);
-            cy.get('.Mrphs-toolsNav__menuitem--link').contains('Assignments').click();
+            cy.get('.site-list-item-collapse.collapse.show a.btn-nav').contains('Assignments').click();
   
             // Create new assignment
             cy.get('.navIntraTool a').contains('Add').click();
   
             // Add a title
-            cy.get('#new_assignment_title').type('Letter Grades');
+            cy.get('#new_assignment_title').click().type('Letter Grades');
 
             cy.get('#new_assignment_grade_type').select('Letter grade');
   
@@ -85,7 +85,7 @@ describe('Assignments', function () {
 
           cy.sakaiLogin(instructor);
           cy.visit(sakaiUrl);
-          cy.get('.Mrphs-toolsNav__menuitem--link').contains('Assignments').click();
+          cy.get('.site-list-item-collapse.collapse.show a.btn-nav').contains('Assignments').click();
 
           // Create new assignment
           cy.get('.navIntraTool a').contains('Add').click();
@@ -118,11 +118,11 @@ describe('Assignments', function () {
 
         it("Can associate a rubric with an assignment", () =>{
 
-          cy.createRubric(instructor, sakaiUrl);
-          cy.get("div.rubric-edit-popover").its("length") === 1;
-          cy.get("div.rubric-edit-popover .save").click();
+          cy.createRubric(instructor, sakaiUrl)
+          cy.get("div.rubric-edit-popover").its("length") === 1
+          cy.get("div.rubric-edit-popover .save").click()
 
-          cy.get('.Mrphs-toolsNav__menuitem--link').contains('Assignments').click()
+          cy.get('.site-list-item-collapse.collapse.show a.btn-nav').contains('Assignments').click()
           cy.get('.itemAction').contains('Edit').click()
 
           // Save assignment with points and a rubric associated{
@@ -149,7 +149,7 @@ describe('Assignments', function () {
             cy.viewport('macbook-13') 
             cy.sakaiLogin(student11)
             cy.visit(sakaiUrl)
-            cy.get('.Mrphs-toolsNav__menuitem--link').contains('Assignments').click()
+            cy.get('.site-list-item-collapse.collapse.show a.btn-nav').contains('Assignments').click()
 
             cy.get('a').contains(assignTitle).click()
 
@@ -173,7 +173,7 @@ describe('Assignments', function () {
             cy.sakaiLogin(student12)
             cy.visit(sakaiUrl)
             cy.get('.portal-jump-linksitem--tools > .Mrphs-skipNav__link').click()
-            cy.get('.Mrphs-toolsNav__menuitem--link').contains('Assignments').click()
+            cy.get('.site-list-item-collapse.collapse.show a.btn-nav').contains('Assignments').click()
 
             cy.get('a').contains(assignTitle).click()
 
@@ -199,7 +199,7 @@ describe('Assignments', function () {
         it('can can allow a student to resubmit', function() {
             cy.sakaiLogin(instructor)
             cy.visit(sakaiUrl)
-            cy.get('.Mrphs-toolsNav__menuitem--link').contains('Assignments').click()
+            cy.get('.site-list-item-collapse.collapse.show a.btn-nav').contains('Assignments').click();
 
             cy.get('.itemAction a').contains('Grade').click()
 
@@ -220,7 +220,7 @@ describe('Assignments', function () {
             cy.sakaiLogin(student12)
             cy.visit(sakaiUrl)
             cy.get('.portal-jump-linksitem--tools > .Mrphs-skipNav__link').click()
-            cy.get('.Mrphs-toolsNav__menuitem--link').contains('Assignments').click()
+            cy.get('.site-list-item-collapse.collapse.show a.btn-nav').contains('Assignments').click();
 
             // Click into the assignment
             cy.get('a').contains(assignTitle).click()

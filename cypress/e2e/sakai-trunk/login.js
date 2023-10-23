@@ -29,7 +29,7 @@ describe('Logging In - Instructor', function () {
       cy.get('input[name=pw]').type('sakai{enter}')
 
       // we should have visible errors now
-      cy.get('div.alertMessage')
+      cy.get('div.alert')
       .should('be.visible')
       .and('contain', 'Invalid login')
 
@@ -86,11 +86,11 @@ describe('Logging In - Instructor', function () {
       // after cy.request, the session cookie has been set
       // and we can visit a protected page
       cy.visit('/portal/')
-      cy.get('.sites-section-heading').should('contain', 'Current site')
+      cy.get('.nav span').should('contain', 'Overview')
 
       // or another protected page
       cy.visit('/portal/site/~' + username)
-      cy.get('#site-current-pages').should('contain', 'Preferences')
+      cy.get('#toolMenu .btn-nav').should('contain', 'Preferences')
     })
 
   })

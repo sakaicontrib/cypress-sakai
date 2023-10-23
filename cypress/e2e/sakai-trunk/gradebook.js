@@ -35,15 +35,14 @@ describe('Gradebook', () => {
     it('Can create gradebook categories', () => {
       cy.sakaiLogin(instructor);
       cy.visit(sakaiUrl);
-      cy.get('.Mrphs-toolsNav__menuitem--link').contains('Gradebook').click();
+      cy.get('.site-list-item-collapse.collapse.show a.btn-nav').contains('Gradebook').click();
 
-      cy.server();
       // DOM is being modified by Wicket so wait for the POST to complete
-      cy.route('POST', '/portal/site/*/tool/*/settings?1-1.IBehaviorListener.0-form-categoryPanel-settingsCategoriesPanel-categoriesWrap-addCategory').as('addCat');
+      cy.intercept('POST', '/portal/site/*/tool/*/settings?1-1.IBehaviorListener.0-form-categoryPanel-settingsCategoriesPanel-categoriesWrap-addCategory').as('addCat');
 
       // We want to use categories
       cy.get('a[title="Settings"]').click();
-      cy.get('a').contains('Categories').click();
+      cy.get('.accordion button').contains('Categories').click();
       cy.get('input[type="radio"]').last().click();
 
       cats.forEach((cat, i) => {
@@ -60,7 +59,7 @@ describe('Gradebook', () => {
     it('Can create gradebook items', () => {
       cy.sakaiLogin(instructor);
       cy.visit(sakaiUrl);
-      cy.get('.Mrphs-toolsNav__menuitem--link').contains('Gradebook').click();
+      cy.get('.site-list-item-collapse.collapse.show a.btn-nav').contains('Gradebook').click();
 
       cats.forEach((cat, i) => {
         cy.get('.wicket-modal').should('not.exist');

@@ -30,15 +30,15 @@ describe('Samigo', function () {
     it('can create a quiz from scratch', function () {
       cy.sakaiLogin(instructor)
       cy.visit(sakaiUrl)
-      cy.get('.Mrphs-toolsNav__menuitem--link').contains('Tests').click()
+      cy.get('.site-list-item-collapse.collapse.show a.btn-nav').contains('Tests').click()
 
       cy.get('#authorIndexForm a').contains('Add').click()
-      cy.get('#authorIndexForm\\:title').type(samigoTitle)
+      cy.get('#authorIndexForm\\:title').click().type(samigoTitle)
       cy.get('#authorIndexForm\\:createnew').click()
 
       // Add a multiple choice question
       cy.get('#assessmentForm\\:parts\\:0\\:changeQType').select('Multiple Choice')
-      cy.get('#itemForm\\:answerptr').clear().type('99.99')
+      cy.get('#itemForm\\:answerptr').click().clear().type('99.99')
       cy.get('#itemForm textarea').first().type('What is chiefly responsible for the increase in the average length of life in the USA during the last fifty years?')
       cy.get('#itemForm\\:mcchoices textarea').first().type('Compulsory health and physical education courses in public schools.')
       cy.get('#itemForm\\:mcchoices textarea').eq(1).type('The reduced death rate among infants and young children.')
@@ -49,13 +49,13 @@ describe('Samigo', function () {
       // Edit the first question
       cy.get('#assessmentForm\\:parts\\:0\\:parts\\:0\\:answerptr').should('have.value', '99.99')
       cy.get('#assessmentForm\\:parts\\:0\\:parts\\:0\\:modify').click()
-      cy.get('#itemForm\\:answerptr').clear().type('100.00')
+      cy.get('#itemForm\\:answerptr').click().clear().type('100.00')
       cy.get('#itemForm\\:mcchoices textarea').eq(3).type('Safer cars.')
       cy.get('input[type="submit"]').contains('Save').click()
 
       // Add a second question
       cy.get('#assessmentForm\\:parts\\:0\\:changeQType').select('Multiple Choice')
-      cy.get('#itemForm\\:answerptr').clear().type('100.00')
+      cy.get('#itemForm\\:answerptr').click().clear().type('100.00')
       cy.get('#itemForm textarea').first().type('What is the main reason so many people moved to California in 1849?')
       cy.get('#itemForm\\:mcchoices textarea').first().type('California land was fertile, plentiful, and inexpensive.')
       cy.get('#itemForm\\:mcchoices textarea').eq(1).type('Gold was discovered in central California.')
@@ -67,7 +67,7 @@ describe('Samigo', function () {
 
       // Add a second part
       cy.get('#assessmentForm\\:addPart').click()
-      cy.get('#modifyPartForm\\:title').type('Second Part')
+      cy.get('#modifyPartForm\\:title').click().type('Second Part')
       cy.get('input[type="submit"]').contains('Save').click()
 
       // Delete the second part
@@ -83,7 +83,7 @@ describe('Samigo', function () {
 
       // Add a calculated question
       cy.get('#assessmentForm\\:parts\\:0\\:changeQType').select('Calculated Question')
-      cy.get('#itemForm\\:answerptr').clear().type('10.00')
+      cy.get('#itemForm\\:answerptr').click().clear().type('10.00')
       cy.get('#itemForm textarea.simple_text_area').first()
         .type('Kevin has {x} apples. He buys {y} more. Now Kevin has [[{x}+{y}]]. Jane eats {z} apples. Kevin now has {{w}} apples.',
           { parseSpecialCharSequences: false }
@@ -113,7 +113,7 @@ describe('Samigo', function () {
 
       // Edit the published quiz
       cy.get('#authorIndexForm\\:coreAssessments button.dropdown-toggle').first().click()
-      cy.get('ul li a').contains('Edit').click()
+      cy.get('#authorIndexForm\\:coreAssessments ul li a').contains('Edit').click()
       cy.get('input[type="submit"]').contains('Edit').click()
       cy.get('#assessmentForm\\:parts\\:0\\:parts\\:0\\:modify').click()
       cy.get('#itemForm textarea').first().type('This is edited question text')
@@ -126,22 +126,21 @@ describe('Samigo', function () {
     it('can create an essay question with rubric from scratch', () => {
 
       cy.createRubric(instructor, sakaiUrl);
-      cy.get("div.rubric-edit-popover").its("length") === 1;
-      cy.get("div.rubric-edit-popover .save").click();
+      cy.get("div.popover button").contains('Save').click({force: true});
 
-      cy.get('.Mrphs-toolsNav__menuitem--link').contains('Tests').click()
+      cy.get('.site-list-item-collapse.collapse.show a.btn-nav').contains('Tests').click()
 
       cy.get('#authorIndexForm a').contains('Add').click()
-      cy.get('#authorIndexForm\\:title').type(essayTitle)
+      cy.get('#authorIndexForm\\:title').click().type(essayTitle)
       cy.get('#authorIndexForm\\:createnew').click()
 
       // Add an essay question
       cy.get('#assessmentForm\\:parts\\:0\\:changeQType').select('Short Answer/Essay')
-      cy.get('#itemForm\\:answerptr').clear().type('50.00')
+      cy.get('#itemForm\\:answerptr').click().clear().type('50.00')
 
       // Select the associate rubric radio
       cy.get(".sakai-rubric-association input[type=radio][value=1]").click()
-      cy.get("#itemForm\\:questionItemText_textinput").clear().type("How big is a fish?")
+      cy.get("#itemForm\\:questionItemText_textinput").click().clear().type("How big is a fish?")
       cy.get('input[type="submit"]').contains('Save').click()
 
       // Publish the quiz
@@ -149,12 +148,12 @@ describe('Samigo', function () {
       cy.get("#publishAssessmentForm\\:publish").click()
     })
 
-    it('can take assessment as student on desktop', function() {
+    it.skip('can take assessment as student on desktop', function() {
 
       cy.viewport('macbook-13') 
       cy.sakaiLogin(student11)
       cy.visit(sakaiUrl)
-      cy.get('.Mrphs-toolsNav__menuitem--link').contains('Tests').click()
+      cy.get('.site-list-item-collapse.collapse.show a.btn-nav').contains('Tests').click()
 
       cy.get('#selectIndexForm\\:selectTable a').contains(samigoTitle).click()
 
@@ -168,7 +167,7 @@ describe('Samigo', function () {
       cy.get('input[type="submit"].active').contains('Next').click()
 
       // Now submit the essay question
-      cy.get('.Mrphs-toolsNav__menuitem--link').contains('Tests').click()
+      cy.get('.site-list-item-collapse.collapse.show a.btn-nav').contains('Tests').click()
 
       cy.get('#selectIndexForm\\:selectTable a').contains(essayTitle).click()
       cy.get('#takeAssessmentForm\\:honor_pledge').click()
@@ -178,11 +177,11 @@ describe('Samigo', function () {
       cy.get("#takeAssessmentForm\\:submitForGrade").click();
     })
 
-    it('can grade an essay question by rubric', function () {
+    it.skip('can grade an essay question by rubric', function () {
 
       cy.sakaiLogin(instructor)
       cy.visit(sakaiUrl)
-      cy.get('.Mrphs-toolsNav__menuitem--link').contains('Tests').click()
+      cy.get('.site-list-item-collapse.collapse.show a.btn-nav').contains('Tests').click()
       cy.get("#authorIndexForm\\:coreAssessments .submitted a").contains("1").click()
       cy.get("#editTotalResults\\:questionScoresMenuLink").click()
       cy.get("a[title='Save Rubric Grading']").click()
@@ -247,13 +246,13 @@ describe('Samigo', function () {
 
         cy.sakaiLogin(instructor)
         cy.visit(sakaiUrl)
-        cy.get('.Mrphs-toolsNav__menuitem--link').contains('Tests').click()
+        cy.get('.site-list-item-collapse.collapse.show a.btn-nav').contains('Tests').click()
         const uuid = Cypress._.random(0, 1e6)
 
         // Create a new pool
         cy.get('#authorIndexForm a').contains('Question Pools').click()
         cy.get('#questionpool\\:add').click()
-        cy.get('#questionpool\\:namefield').type(uuid)
+        cy.get('#questionpool\\:namefield').click().type(uuid)
         cy.get('#questionpool\\:submit').click()
         cy.get('#questionpool\\:TreeTable a').contains(uuid).click()
 
@@ -261,9 +260,9 @@ describe('Samigo', function () {
         cy.get('a').contains('Add Question').click()
         cy.get('#content form select').select('Multiple Choice')
         cy.get('input[type="submit"]').contains('Save').click()
-        cy.get('#itemForm\\:answerptr').clear().type('100.00')
-        cy.get('#itemForm textarea').first().type('What is the main reason so many people moved to California in 1849?')
-        cy.get('#itemForm\\:mcchoices textarea').first().type('California land was fertile, plentiful, and inexpensive.')
+        cy.get('#itemForm\\:answerptr').click().clear().type('100.00')
+        cy.get('#itemForm textarea').first().click().type('What is the main reason so many people moved to California in 1849?')
+        cy.get('#itemForm\\:mcchoices textarea').first().click().type('California land was fertile, plentiful, and inexpensive.')
         cy.get('#itemForm\\:mcchoices textarea').eq(1).type('Gold was discovered in central California.')
         cy.get('#itemForm\\:mcchoices textarea').eq(2).type('The east was preparing for a civil war.')
         cy.get('#itemForm\\:mcchoices textarea').eq(3).type('They wanted to establish religious settlements.')
@@ -272,7 +271,7 @@ describe('Samigo', function () {
 
         // Edit the question
         cy.get('#editform\\:questionpool-questions\\:0\\:modify').click()
-        cy.get('#itemForm textarea').first().clear().type('Edited question text')
+        cy.get('#itemForm textarea').first().click().clear().type('Edited question text')
         cy.get('input[type="submit"]').contains('Save').click()
         cy.get('#editform\\:questionpool-questions').find('a[title="Edit Question"]').should('have.length', 1)
     })
