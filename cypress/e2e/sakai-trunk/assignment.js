@@ -30,7 +30,7 @@ describe('Assignments', function () {
             }
         });
 
-        it.only('can create a letter grade assignment', () => {
+        it('can create a letter grade assignment', () => {
             cy.sakaiLogin(instructor);
             cy.visit(sakaiUrl);
             cy.get('.site-list-item-collapse.collapse.show a.btn-nav').contains('Assignments').click();
