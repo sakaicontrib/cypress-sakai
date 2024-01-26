@@ -17,11 +17,11 @@ describe('Become User', function () {
               .should('have.value', 'instructor1')
             cy.get('#su\\:become').click()
             cy.visit('/portal/site/!admin')
-            cy.get('.portal-header-breadcrumb').contains('Site Unavailable')
+            cy.get('.portal-header-breadcrumb-item').contains('Site Unavailable')
             cy.get('.sak-sysInd-account').click()
             cy.get('a#loginLink1').contains('Return to').click()
             cy.visit('/portal/site/!admin')
-            cy.get('.portal-header-breadcrumb').should('not.contain', 'Site Unavailable')
+            cy.get('.portal-header-breadcrumb-item').should('not.contain', 'Site Unavailable')
         })
     })
 });
