@@ -11,7 +11,7 @@ describe('PA System', function () {
         it('Administration Workspace - PA System', function () {
             cy.visit('/portal/site/!admin')
             cy.get('#header-site-title').should('contain', 'Administration')
-            cy.get('#pinned-site-admin-page-list a.btn-nav').contains('PA System').click()
+            cy.get('#site-list-recent-item-admin a.btn-nav').contains('PA System').click()
             cy.get('a').contains('Create Banner').click()
             cy.get('form input#message').click()
               .type('This is a test')

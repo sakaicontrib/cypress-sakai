@@ -11,7 +11,7 @@ describe('Become User', function () {
         it('Administration Workspace - Become User', function () {
             cy.visit('/portal/site/!admin')
             cy.get('.site-list-item').should('contain', 'Administration')
-            cy.get('#pinned-site-admin-page-list a.btn-nav').contains('Become User').click()
+            cy.get('#site-list-recent-item-admin a.btn-nav').contains('Become User').click()
             cy.get('#su input[type="text"]').click()
               .type('instructor1')
               .should('have.value', 'instructor1')
