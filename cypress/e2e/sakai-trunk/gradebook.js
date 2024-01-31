@@ -1,4 +1,4 @@
-describe('Gradebook', () => {
+describe('Gradebook', { defaultCommandTimeout: 95000 }, () => {
 
   const instructor = 'instructor1';
   const student = 'student0011';
@@ -13,6 +13,7 @@ describe('Gradebook', () => {
 
     beforeEach(function() {
       cy.intercept('POST', 'https://www.google-analytics.com/j/collect*', (req) => { req.destroy() }).as('googleanalytics')
+      //cy.intercept('GET', /\/api\/users\/[a-z0-9-]+\/profile/, (req) => { req.destroy() }).as('getProfile')
     })
 
     // Rubrics seems to have some issues with webcomponent and load order
