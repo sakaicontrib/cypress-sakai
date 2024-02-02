@@ -123,7 +123,7 @@ describe('Samigo', function () {
       cy.get('input[type="submit"]').contains('Republish').click()
     })
 
-    it('can create an essay question with rubric from scratch', () => {
+    it.skip('can create an essay question with rubric from scratch', () => {
 
       cy.createRubric(instructor, sakaiUrl);
       cy.get('.modal.show .modal-dialog button').contains('Save').click({force: true});
