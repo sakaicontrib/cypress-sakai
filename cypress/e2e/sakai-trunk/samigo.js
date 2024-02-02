@@ -126,7 +126,7 @@ describe('Samigo', function () {
     it('can create an essay question with rubric from scratch', () => {
 
       cy.createRubric(instructor, sakaiUrl);
-      cy.get(".modal-dialog button").contains('Save').click({force: true});
+      cy.get('.modal.show .modal-dialog button').contains('Save').click({force: true});
 
       cy.get('.site-list-item-collapse.collapse.show a.btn-nav').contains('Tests').click()
 

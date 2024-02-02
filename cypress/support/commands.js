@@ -139,7 +139,6 @@ Cypress.Commands.add("createRubric", (instructor, sakaiUrl) => {
 
   // Create new rubric
   cy.get('.add-rubric').click();
-  cy.get('.modal.show .modal-dialog button').contains('Save').click();
 })
 
 Cypress.Commands.add("checkForCriticalA11yIssues", () => {
