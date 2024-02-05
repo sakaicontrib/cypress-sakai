@@ -123,6 +123,7 @@ Cypress.Commands.add('sakaiCreateCourse', (username, toolNames) => {
   cy.get('.act input[name="continue"]').click()
   toolNames.forEach(tn => cy.get(`input#${tn}`).check().should('be.checked'));
   cy.get('.act input[name="Continue"]').click()
+  cy.get('.act input[name="Continue"]').click()
   cy.get('input#continueButton').click()
   cy.get('input#addSite').click()
   cy.get('#flashNotif').contains('has been created')
