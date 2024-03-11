@@ -47,6 +47,16 @@ Cypress.Commands.add('sakaiLogin', (username) => {
   }).then((resp) => {
     expect(resp.status).to.eq(200)
   })
+
+  cy.get('body').then(($body) => {
+    // Check if the div with class 'Sakai-tutorial' exists in the body
+    if ($body.find('.sakai-tutorial').length) {
+      // If found, then click the close button within it
+      cy.get('.sakai-tutorial').find('a.qtipClose').click()
+    }
+    // If not found, do nothing and continue with the rest of the test
+  })
+
 });
 
 Cypress.Commands.add('sakaiUuid', () => {
