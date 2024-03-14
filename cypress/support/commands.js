@@ -41,29 +41,21 @@ Cypress.Commands.add('sakaiLogin', (username) => {
   cy.getCookies().should('have.length', 1)
 
   // Need to clear the tutorial so it doesn't overlap on tests
+  cy.window().then((win) => {
+    const tutorialFlag = win.sessionStorage.getItem('tutorialFlagSet')
+    if (!tutorialFlag || tutorialFlag !== 'true') {
+      win.sessionStorage.setItem('tutorialFlagSet', 'true')
+      cy.log('tutorialFlagSet has been set to true in session storage')
+    }
+  })
+
   cy.request({
     url: '/portal/',
     followRedirect: false,
   }).then((resp) => {
     expect(resp.status).to.eq(200)
   })
-
-  cy.get('body').then(($body) => {
-    // Check if the div with class 'Sakai-tutorial' exists in the body
-    if ($body.find('.sakai-tutorial').length) {
-      // If found, then click the close button within it
-      cy.get('.sakai-tutorial').find('a.qtipClose').click().then(() => {
-        // After clicking the close button, check for the 'a.tut-close' button
-        cy.get('body').then(($bodyAfterClick) => {
-          if ($bodyAfterClick.find('a.tut-close').length) {
-            cy.get('a.tut-close').click();
-          }
-          // If 'a.end-tut' button does not exist, nothing is done, and the test continues
-        });
-      });
-    }
-    // If not found, do nothing and continue with the rest of the test
-  });
+})
 
 Cypress.Commands.add('sakaiUuid', () => {
 
