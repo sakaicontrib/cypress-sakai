@@ -52,12 +52,18 @@ Cypress.Commands.add('sakaiLogin', (username) => {
     // Check if the div with class 'Sakai-tutorial' exists in the body
     if ($body.find('.sakai-tutorial').length) {
       // If found, then click the close button within it
-      cy.get('.sakai-tutorial').find('a.qtipClose').click()
+      cy.get('.sakai-tutorial').find('a.qtipClose').click().then(() => {
+        // After clicking the close button, check for the 'a.tut-close' button
+        cy.get('body').then(($bodyAfterClick) => {
+          if ($bodyAfterClick.find('a.tut-close').length) {
+            cy.get('a.tut-close').click();
+          }
+          // If 'a.end-tut' button does not exist, nothing is done, and the test continues
+        });
+      });
     }
     // If not found, do nothing and continue with the rest of the test
-  })
-
-});
+  });
 
 Cypress.Commands.add('sakaiUuid', () => {
 
