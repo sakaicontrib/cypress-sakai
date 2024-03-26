@@ -9,6 +9,11 @@
 // ***********************************************
 //
 
+// Service workers make the tests unbearably slow
+Cypress.on('window:before:load', (win) => {
+  delete win.navigator.__proto__.serviceWorker
+})
+
 Cypress.Commands.add('sakaiLogin', (username) => {
 
   Cypress.log({
