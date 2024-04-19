@@ -39,7 +39,8 @@ describe('Gradebook', { defaultCommandTimeout: 95000 }, () => {
       cy.get('.site-list-item-collapse.collapse.show a.btn-nav').contains('Gradebook').click();
 
       // DOM is being modified by Wicket so wait for the POST to complete
-      cy.intercept('POST', '/portal/site/*/tool/*/settings?1-1.IBehaviorListener.0-form-categoryPanel-settingsCategoriesPanel-categoriesWrap-addCategory').as('addCat');
+      // Wicket 9 upgrade: portal/site/49638381-cc95-4770-9814-a0749e9ed0c8/tool/64165fcd-6430-47a6-bc3c-66f85b6deea7/settings?1-1.0-form-categoryPanel-settingsCategoriesPanel-categoriesWrap-categoriesView-1-name
+      cy.intercept('POST', '/portal/site/*/tool/*/settings?1*form-categoryPanel-settingsCategoriesPanel-categoriesWrap*').as('addCat');
 
       // We want to use categories
       cy.get('a[title="Settings"]').click();
