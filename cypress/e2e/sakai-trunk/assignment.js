@@ -10,15 +10,9 @@ describe('Assignments', function () {
       cy.intercept('POST', 'https://www.google-analytics.com/j/collect*', (req) => { req.destroy() }).as('googleanalytics')
     })
 
-    // Rubrics seems to have some issues with webcomponent and load order
-    Cypress.on('uncaught:exception', (err, runnable) => {
-      // returning false here prevents Cypress from failing the test
-      return false
-    })
-
     context('Create a new Assignment', function () {
 
-        it.only('can create a new course', function() {
+        it('can create a new course', function() {
             cy.sakaiLogin(instructor)
 
             if (sakaiUrl == null) {
@@ -53,8 +47,9 @@ describe('Assignments', function () {
             // Confirm can grade it with letters
             cy.get('.itemAction a').last().click()
             cy.wait(10000)
-            cy.get('grader-toggle input').check()
+            cy.get('sakai-grader-toggle input').check()
             cy.get('#submissionList a').contains('student0011').click()
+            cy.get('#grader-link-block button').click()
             cy.get('#letter-grade-selector').select('B')
             cy.get('.act .active').first().click()
             cy.get('button').contains('Return to List').click()
@@ -64,7 +59,7 @@ describe('Assignments', function () {
             // Now use the old grader
             cy.get('.itemAction a').last().click()
             cy.wait(10000)
-            cy.get('grader-toggle input').uncheck()
+            cy.get('sakai-grader-toggle input').uncheck()
             cy.get('#submissionList a').contains('student0011').click()
             cy.get('select#grade option:selected').should('have.text', 'B')
             cy.get('select#grade').select('C')
@@ -77,7 +72,7 @@ describe('Assignments', function () {
             cy.get('input#check_1').check()
             cy.get('input#btnRemove').click()
             cy.get('div').contains('Are you sure you want to delete')
-            cy.get('input#delete').click()
+            cy.get('input').contains('Delete').click()
 
         });
 
@@ -91,7 +86,7 @@ describe('Assignments', function () {
           cy.get('.navIntraTool a').contains('Add').click();
 
           // Add a title
-          cy.get('#new_assignment_title').type(assignTitle);
+          cy.get('input#new_assignment_title').click().type(assignTitle);
 
           // Honor pledge
           cy.get('#new_assignment_check_add_honor_pledge').click();
@@ -119,10 +114,10 @@ describe('Assignments', function () {
         it("Can associate a rubric with an assignment", () =>{
 
           cy.createRubric(instructor, sakaiUrl)
-          cy.get("div.rubric-edit-popover").its("length") === 1
-          cy.get("div.rubric-edit-popover .save").click()
+          cy.get(".modal-dialog").its("length") === 1
+          cy.get(".modal-footer button").contains('Save').click({force: true})
 
-          cy.get('.site-list-item-collapse.collapse.show a.btn-nav').contains('Assignments').click()
+          cy.get('.site-list-item-collapse.collapse.show a.btn-nav').contains('Assignments').click({force: true})
           cy.get('.itemAction').contains('Edit').click()
 
           // Save assignment with points and a rubric associated{
@@ -172,8 +167,8 @@ describe('Assignments', function () {
             cy.viewport('iphone-x') 
             cy.sakaiLogin(student12)
             cy.visit(sakaiUrl)
-            cy.get('.portal-jump-linksitem--tools > .Mrphs-skipNav__link').click()
-            cy.get('.site-list-item-collapse.collapse.show a.btn-nav').contains('Assignments').click()
+            cy.get('button.btn-sidebar-collapse').click()
+            cy.get('ul.site-page-list a.btn-nav').contains('Assignments').click()
 
             cy.get('a').contains(assignTitle).click()
 
@@ -204,7 +199,7 @@ describe('Assignments', function () {
             cy.get('.itemAction a').contains('Grade').click()
 
             cy.wait(10000)
-            cy.get('grader-toggle input').check()
+            cy.get('sakai-grader-toggle input').check()
             cy.get('#submissionList a').contains(student12).click()
 
             // Allow student12 to resubmit
@@ -219,8 +214,8 @@ describe('Assignments', function () {
             cy.viewport('iphone-x') 
             cy.sakaiLogin(student12)
             cy.visit(sakaiUrl)
-            cy.get('.portal-jump-linksitem--tools > .Mrphs-skipNav__link').click()
-            cy.get('.site-list-item-collapse.collapse.show a.btn-nav').contains('Assignments').click();
+            cy.get('button.btn-sidebar-collapse').click()
+            cy.get('ul.site-page-list a.btn-nav').contains('Assignments').click()
 
             // Click into the assignment
             cy.get('a').contains(assignTitle).click()
@@ -236,6 +231,41 @@ describe('Assignments', function () {
 
             // Final resubmit
             cy.get('.act input.active').should('have.value', 'Submit').click()
+        })
+
+        it('can create a non-electronic assignment', () => {
+
+          cy.sakaiLogin(instructor);
+          cy.visit(sakaiUrl);
+          cy.get('.site-list-item-collapse.collapse.show a.btn-nav').contains('Assignments').click();
+
+          // Create new assignment
+          cy.get('.navIntraTool a').contains('Add').click();
+
+          // Add a title
+          cy.get('#new_assignment_title').click().type('Non-electronic Assignment');
+
+          // Need to unset grading
+          cy.get("#gradeAssignment").uncheck();
+
+          // Need to choose Non-electronic from the dropdown
+          cy.get('#subType').select('Non-electronic');
+
+          // Type into the ckeditor instructions field
+          cy.type_ckeditor("new_assignment_instructions", 
+              "<p>Submit a 3000 word essay on the history of the internet to my office in Swanson 201.</p>")
+
+          // Save it with instructions
+          cy.get('div.act input.active').first().click();
+
+           // Now use the old grader
+           cy.get('.itemAction a').last().click()
+           cy.wait(10000)
+           cy.get('sakai-grader-toggle input').uncheck()
+           cy.get('#submissionList a').contains('student0011').click()
+           cy.type_ckeditor("grade_submission_feedback_comment", 
+            "<p>Please submit again.</p>")
+           cy.get('input#save-and-return').click()
         })
   
     })
