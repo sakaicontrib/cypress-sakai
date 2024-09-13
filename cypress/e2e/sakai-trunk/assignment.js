@@ -170,10 +170,10 @@ describe('Assignments', function () {
             cy.get('button.btn-sidebar-collapse').click()
             cy.get('ul.site-page-list a.btn-nav').contains('Assignments').click()
 
-            cy.get('a').contains(assignTitle).click()
+            cy.get('a').contains(assignTitle).first().click()
 
             // Honor Pledge?
-            cy.get('input[type="submit"]').contains('Agree').click()
+            cy.get('input[type="submit"]').contains('Agree').first().click()
 
             cy.type_ckeditor('Assignment.view_submission_text', '<p>This is my submission text</p>')
             cy.get('.act input.active').first().should('have.value', 'Proceed').click()
@@ -183,7 +183,7 @@ describe('Assignments', function () {
 
             // Confirmation page
             cy.get('h3').contains('Submission Confirm')
-            cy.get('.act input.active').should('have.value', 'Back to list').click()
+            cy.get('.act input.active').should('have.value', 'Back to list').first().click()
 
             // Try to submit again
             cy.get('a').contains(assignTitle).click()
