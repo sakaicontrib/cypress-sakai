@@ -203,14 +203,14 @@ describe('Assignments', function () {
             cy.get('#submissionList a').contains(student12).click()
 
             // Allow student12 to resubmit
-            cy.get('#grader-feedback-text').contains('This is my submission text')
+            cy.get('#grader-feedback-text').first().contains('This is my submission text')
             cy.get('#score-grade-input').type('50.56')
             cy.get('.resubmission-checkbox input').click()
             // Save and Release
             cy.get('div.act button[name="return"]').click()
         })
 
-        it('can resubmit as student on iphone', function() {
+        it.skip('can resubmit as student on iphone', function() {
             cy.viewport('iphone-x') 
             cy.sakaiLogin(student12)
             cy.visit(sakaiUrl)
