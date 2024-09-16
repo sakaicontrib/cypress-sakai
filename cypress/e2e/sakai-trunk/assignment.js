@@ -194,7 +194,7 @@ describe('Assignments', function () {
         it('can can allow a student to resubmit', function() {
             cy.sakaiLogin(instructor)
             cy.visit(sakaiUrl)
-            cy.get('.site-list-item-collapse.collapse.show a.btn-nav').contains('Assignments').click();
+            cy.get('.site-list-item-collapse.collapse.show a.btn-nav').contains('Assignments').click()
 
             cy.get('.itemAction a').contains('Grade').click()
 
@@ -204,10 +204,11 @@ describe('Assignments', function () {
 
             // Allow student12 to resubmit
             cy.get('#grader-feedback-text').first().contains('This is my submission text')
+            cy.get("#grader-link-block button").first().click()
             cy.get('#score-grade-input').type('50.56')
             cy.get('.resubmission-checkbox input').click()
             // Save and Release
-            cy.get('div.act button[name="return"]').click()
+            cy.get('#grader-save-buttons button[name="return"]').click()
         })
 
         it.skip('can resubmit as student on iphone', function() {
