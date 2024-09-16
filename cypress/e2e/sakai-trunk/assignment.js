@@ -167,7 +167,7 @@ describe('Assignments', function () {
             cy.viewport('iphone-x') 
             cy.sakaiLogin(student12)
             cy.visit(sakaiUrl)
-            cy.get('button.btn-sidebar-collapse').click()
+            cy.get('button.btn-sidebar-collapse').first().click()
             cy.get('ul.site-page-list a.btn-nav').contains('Assignments').click()
 
             cy.get('a').contains(assignTitle).first().click()
@@ -214,7 +214,7 @@ describe('Assignments', function () {
             cy.viewport('iphone-x') 
             cy.sakaiLogin(student12)
             cy.visit(sakaiUrl)
-            cy.get('button.btn-sidebar-collapse').click()
+            cy.get('button.btn-sidebar-collapse').first().click()
             cy.get('ul.site-page-list a.btn-nav').contains('Assignments').click()
 
             // Click into the assignment
