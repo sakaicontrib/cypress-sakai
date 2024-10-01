@@ -116,19 +116,20 @@ describe('Samigo', function () {
       cy.get('#authorIndexForm\\:coreAssessments ul li a').contains('Edit').click()
       cy.get('input[type="submit"]').contains('Edit').click()
       cy.get('#assessmentForm\\:parts\\:0\\:parts\\:0\\:modify').click()
-      cy.get('#itemForm textarea').first().type('This is edited question text')
+      cy.get('#itemForm textarea').first().focus().clear().type('This is edited question text')
       cy.get('input[type="submit"]').contains('Save').click()
       cy.get('#assessmentForm\\:parts').find('.samigo-question-callout').should('have.length', 2)
       cy.get('input[type="submit"]').contains('Republish').click()
       cy.get('input[type="submit"]').contains('Republish').click()
     })
 
-    it.skip('can create an essay question with rubric from scratch', () => {
+    it('can create an essay question with rubric from scratch', () => {
 
       cy.createRubric(instructor, sakaiUrl);
-      cy.get('.modal.show .modal-dialog button').contains('Save').click({force: true});
+      cy.get(".modal-dialog").its("length") === 1
+      cy.get("sakai-rubric-edit .modal-footer button").contains('Save').click({force: true})
 
-      cy.get('.site-list-item-collapse.collapse.show a.btn-nav').contains('Tests').click()
+      cy.get('.site-list-item-collapse.collapse.show a.btn-nav').contains('Tests').click({force: true})
 
       cy.get('#authorIndexForm a').contains('Add').click()
       cy.get('#authorIndexForm\\:title').click().type(essayTitle)
@@ -148,7 +149,7 @@ describe('Samigo', function () {
       cy.get("#publishAssessmentForm\\:publish").click()
     })
 
-    it.skip('can take assessment as student on desktop', function() {
+    it('can take assessment as student on desktop', function() {
 
       cy.viewport('macbook-13') 
       cy.sakaiLogin(student11)
@@ -177,7 +178,7 @@ describe('Samigo', function () {
       cy.get("#takeAssessmentForm\\:submitForGrade").click();
     })
 
-    it.skip('can grade an essay question by rubric', function () {
+    it('can grade an essay question by rubric', function () {
 
       cy.sakaiLogin(instructor)
       cy.visit(sakaiUrl)
