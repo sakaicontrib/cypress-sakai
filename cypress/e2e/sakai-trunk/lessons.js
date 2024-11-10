@@ -1,7 +1,8 @@
+// Test performs the following:
 // login
-// create a course if not existant
-        // add lessons tool to the course site
-// create a lesson item
+// create a course if link to course is not mentioned in sakaiUrl
+        // add lessons tool to the course site when creating a new course
+// creates a lesson item
 // verify if lesson item was created
 describe('Lessons', function () {
     const instructor = 'instructor1'
@@ -53,6 +54,7 @@ describe('Lessons', function () {
             cy.get('#checklistItemDiv4 > .checklist-item-name').type('D');
             // save checklist
             cy.get('#save').click();
+            // verifies a div of checklist is visible
             cy.get('.checklistDiv').should('be.visible');
 
 
