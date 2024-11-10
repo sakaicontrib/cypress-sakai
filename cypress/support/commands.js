@@ -129,12 +129,16 @@ Cypress.Commands.add('sakaiCreateCourse', (username, toolNames) => {
     }
 
     cy.get('form input#courseDesc1').click()
-  })
+  })    
 
   cy.get('input#continueButton').click()
   cy.get('textarea').last().type('Cypress Testing')
   cy.get('.act input[name="continue"]').click()
   toolNames.forEach(tn => cy.get(`input#${tn}`).check().should('be.checked'));
+  // press additional continue button when Lessons tool is added
+  if (toolNames.includes('sakai\\.lessonbuildertool')) {
+      cy.get('#btnContinue').click()
+    }   
   cy.get('.act input[name="Continue"]').click()
     // Set it to publish immediately
     cy.get('#manualPublishing').click()
