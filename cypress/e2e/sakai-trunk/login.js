@@ -23,6 +23,10 @@ describe('Logging In - Instructor', function () {
       cy.injectAxe()
     })
 
+    it('passes pre-login a11y checks', function () {
+      cy.checkForSeriousA11yIssues()
+    })
+
     it('displays errors on login', function () {
       // incorrect username on purpose
       cy.get('input[name=eid]').type('badusername')

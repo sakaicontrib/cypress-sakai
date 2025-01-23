@@ -165,6 +165,10 @@ Cypress.Commands.add("checkForCriticalA11yIssues", () => {
   cy.checkA11y(null, { includedImpacts: ['critical'] }, console.error)
 })
 
+Cypress.Commands.add("checkForSeriousA11yIssues", () => {
+  cy.checkA11y(null, { includedImpacts: ['serious'] }, console.error)
+})
+
 Cypress.Commands.add("isNotInViewport", { prevSubject: true }, (element) => {
   const message = `Did not expect to find ${element[0].outerHTML} in viewport`;
 
