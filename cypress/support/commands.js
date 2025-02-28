@@ -209,6 +209,26 @@ Cypress.Commands.add("isInViewport", { prevSubject: true }, (element) => {
   });
 });
 
+Cypress.Commands.add("sakaiDateSelect", (selector, date) => {
+  Cypress.log({
+    name: 'sakaiDateSelect',
+    message: `${selector} - ${date}`,
+  })
+
+  cy.get(selector).click().then(($input) => {
+    const inputType = $input.attr('type')
+    if (inputType === 'datetime-local') {
+      // Convert date to YYYY-MM-DDTHH:mm format
+      const dateObj = new Date(date)
+      const formattedDate = dateObj.toISOString().slice(0, 16)
+      cy.wrap($input).type(formattedDate)
+    } else {
+      // Assume regular date input that accepts MM/DD/YYYY HH:mm format
+      cy.wrap($input).type(date)
+    }
+  })
+})
+
 //
 //
 // -- This is a child command --

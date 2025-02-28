@@ -1,4 +1,3 @@
-
 describe('Samigo', function () {
 
   const instructor = 'instructor1'
@@ -108,14 +107,7 @@ describe('Samigo', function () {
         }
       })
 
-      cy.get('#assessmentSettingsAction\\:endDate').click().then(($input) => {
-        const inputType = $input.attr('type')
-        if (inputType === 'datetime-local') {
-          cy.wrap($input).type('2034-12-31T12:30')
-        } else {
-          cy.wrap($input).type('12/31/2034 12:30 pm')
-        }
-      })
+      cy.sakaiDateSelect('#assessmentSettingsAction\\:endDate', '12/31/2034 12:30 pm')
 
       cy.get('input[type="submit"]').contains('Publish').click()
       cy.get('input[type="submit"]').contains('Publish').click()
