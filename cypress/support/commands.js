@@ -62,6 +62,15 @@ Cypress.Commands.add('sakaiLogin', (username) => {
   })
 })
 
+Cypress.Commands.add('sakaiToolClick', (toolName) => {
+  Cypress.log({
+    name: 'sakaiToolClick',
+    message: `${toolName}`,
+  })
+  
+  cy.get('.site-list-item-collapse.collapse.show a.btn-nav').contains(toolName).click()
+})
+
 Cypress.Commands.add('sakaiUuid', () => {
 
   let uuid = Cypress.env('TRAVIS_BUILD_NUMBER')
