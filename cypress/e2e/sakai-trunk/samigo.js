@@ -103,11 +103,20 @@ describe('Samigo', function () {
       // Publish the quiz
       cy.get('a').contains('Settings').click()
       cy.get('body').then(($body) => {
-        if ($body.text().includes('not after due date')) {
+        if ($body.text().includes('What is the Final Submission Deadline')) {
           cy.get('#assessmentSettingsAction\\:lateHandling\\:0').click()
         }
       })
-      cy.get('#assessmentSettingsAction\\:endDate').type('12/31/2034 12:30 pm')
+
+      cy.get('#assessmentSettingsAction\\:endDate').click().then(($input) => {
+        const inputType = $input.attr('type')
+        if (inputType === 'datetime-local') {
+          cy.wrap($input).type('2034-12-31T12:30')
+        } else {
+          cy.wrap($input).type('12/31/2034 12:30 pm')
+        }
+      })
+
       cy.get('input[type="submit"]').contains('Publish').click()
       cy.get('input[type="submit"]').contains('Publish').click()
 
