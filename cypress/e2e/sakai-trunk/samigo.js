@@ -107,6 +107,7 @@ describe('Samigo', function () {
         }
       })
 
+      cy.sakaiDateSelect('#assessmentSettingsAction\\:startDate', '01/01/2025 12:30 pm')
       cy.sakaiDateSelect('#assessmentSettingsAction\\:endDate', '12/31/2034 12:30 pm')
 
       cy.get('input[type="submit"]').contains('Publish').click()
