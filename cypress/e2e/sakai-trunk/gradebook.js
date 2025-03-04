@@ -55,7 +55,7 @@ describe('Gradebook', { defaultCommandTimeout: 95000 }, () => {
       });
 
       // Save the category modifications
-      cy.get('.act input[type="button"]').should('have.class', 'active').click();
+      cy.get('.act button').should('have.class', 'active').click();
     })
 
     it('Can create gradebook items', () => {
