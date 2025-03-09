@@ -43,7 +43,7 @@ describe('Gradebook', { defaultCommandTimeout: 95000 }, () => {
       cy.intercept('POST', '/portal/site/*/tool/*/settings?1*form-categoryPanel-settingsCategoriesPanel-categoriesWrap*').as('addCat');
 
       // We want to use categories
-      cy.get('a[title="Settings"]').click();
+      cy.get('.navIntraTool a').contains('Settings').click();
       cy.get('.accordion button').contains('Categories').click();
       cy.get('input[type="radio"]').last().click();
 
