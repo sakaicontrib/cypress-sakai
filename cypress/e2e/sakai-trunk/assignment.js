@@ -74,6 +74,9 @@ describe('Assignments', function () {
             cy.get('div').contains('Are you sure you want to delete')
             cy.get('input').contains('Delete').click()
 
+            // Confirm we are on assignment list
+            cy.get('.navIntraTool a').contains('Add')
+
         });
 
         it('can create a points assignment', () => {
