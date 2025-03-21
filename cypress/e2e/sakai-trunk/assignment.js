@@ -49,7 +49,8 @@ describe('Assignments', function () {
             cy.wait(10000)
             cy.get('sakai-grader-toggle input').check()
             cy.get('#submissionList a').contains('student0011').click()
-            cy.get('#grader-link-block button').click()
+            // The grader is now open by default on a desktop
+            //cy.get('#grader-link-block button').click()
             cy.get('#letter-grade-selector').select('B')
             cy.get('.act .active').first().click()
             cy.get('button').contains('Return to List').click()
@@ -207,7 +208,8 @@ describe('Assignments', function () {
 
             // Allow student12 to resubmit
             cy.get('#grader-feedback-text').first().contains('This is my submission text')
-            cy.get("#grader-link-block button").first().click()
+            // The grader is now open by default on a desktop
+            //cy.get("#grader-link-block button").first().click()
             cy.get('#score-grade-input').type('50.56')
             cy.get('.resubmission-checkbox input').click()
             // Save and Release
