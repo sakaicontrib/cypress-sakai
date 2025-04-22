@@ -72,6 +72,7 @@ describe('Gradebook', { defaultCommandTimeout: 95000 }, () => {
           cy.get(".wicket-modal select[name$='category']").select(`${cat.letter} (${cat.percent}%)`);
           cy.get(".wicket-modal button[name$='submit']").click();
         });
+        cy.wait(2000)
         cy.get(".messageSuccess").should('be.visible')
       });
     });
