@@ -1,8 +1,9 @@
 describe('Announcements', function () {
     const instructor = 'instructor1'
     const student11 = 'student0011'
-    const student12 = 'student0012'
-    const announcementTitle = 'Cypress Announcement'
+    const futureAnnouncementTitle = 'Future Announcement'
+    const pastAnnouncementTitle = 'Past Announcement'
+    const currentAnnouncementTitle = 'Current Announcement'
     let sakaiUrl
 
     beforeEach(function() {
@@ -22,7 +23,7 @@ describe('Announcements', function () {
             }
         });
 
-        it('can create a normal announcement', () => {
+        it('can create a future announcement', () => {
             cy.sakaiLogin(instructor);
             cy.visit(sakaiUrl);
             cy.sakaiToolClick('Announcements');
@@ -31,34 +32,105 @@ describe('Announcements', function () {
             cy.get('.navIntraTool a').contains('Add').click();
   
             // Add a title
-            cy.get('#subject').click().type(announcementTitle);
+            cy.get('#subject').click().type(futureAnnouncementTitle);
   
             // Type into the ckeditor instructions field
             cy.type_ckeditor("body", 
-                "<p>What is chiefly responsible for the increase in the average length of life in the USA during the last fifty years?</p>")
+                "<p>This is a future announcement that should only be visible after the specified date.</p>")
     
-            // Save
-            cy.get('.act input.active').first().click();
-
-            // Now edit it
-            cy.get('table .itemAction a').contains('Edit').click({force: true})
-
-            // Modify the the title
-            cy.get('#subject').click().type(announcementTitle + ' - Edited')
-            cy.get('.act input.active').first().click();
-
-            // Edit and put a date on it 
-            cy.get('table .itemAction a').contains('Edit').click({force: true})
+            // Set future dates
             cy.get('#hidden_specify').click()
             cy.get('#use_start_date').click()
             cy.sakaiDateSelect('#opendate', '06/01/2035 08:30 am')
             cy.get('#use_end_date').click()
             cy.sakaiDateSelect('#closedate', '06/03/2035 08:30 am')
+            
+            // Save
             cy.get('.act input.active').first().click();
 
             // Confirm there is one inactive row
-            //cy.get('table tr.inactive').should('have.length', 1)
+            cy.get('table tr.inactive').should('have.length', 1)
         });
+
+        it('can create a past announcement', () => {
+            cy.sakaiLogin(instructor);
+            cy.visit(sakaiUrl);
+            cy.sakaiToolClick('Announcements');
   
+            // Create new announcement
+            cy.get('.navIntraTool a').contains('Add').click();
+  
+            // Add a title
+            cy.get('#subject').click().type(pastAnnouncementTitle);
+  
+            // Type into the ckeditor instructions field
+            cy.type_ckeditor("body", 
+                "<p>This is a past announcement that should not be visible anymore.</p>")
+    
+            // Set past dates
+            cy.get('#hidden_specify').click()
+            cy.get('#use_start_date').click()
+            cy.sakaiDateSelect('#opendate', '01/01/2020 08:30 am')
+            cy.get('#use_end_date').click()
+            cy.sakaiDateSelect('#closedate', '01/03/2020 08:30 am')
+            
+            // Save
+            cy.get('.act input.active').first().click();
+
+            // Confirm there is another inactive row (total 2 now)
+            cy.get('table tr.inactive').should('have.length', 2)
+        });
+
+        it('can create a current announcement', () => {
+            cy.sakaiLogin(instructor);
+            cy.visit(sakaiUrl);
+            cy.sakaiToolClick('Announcements');
+  
+            // Create new announcement
+            cy.get('.navIntraTool a').contains('Add').click();
+  
+            // Add a title
+            cy.get('#subject').click().type(currentAnnouncementTitle);
+  
+            // Type into the ckeditor instructions field
+            cy.type_ckeditor("body", 
+                "<p>This is a current announcement that should be visible to everyone.</p>")
+    
+            // Save without specifying dates (makes it current/active)
+            cy.get('.act input.active').first().click();
+
+            // Verify we have 2 inactive (past and future) and 1 active (current) announcements
+            cy.get('table tr.inactive').should('have.length', 2)
+            cy.get('table tr:not(.inactive)').should('exist')
+        });
+
+        it('student can only see current announcement', () => {
+            cy.sakaiLogin(student11);
+            cy.visit(sakaiUrl);
+            
+            // Check Announcements tool first
+            cy.sakaiToolClick('Announcements');
+            
+            // Verify only the current announcement is visible
+            cy.contains(currentAnnouncementTitle).should('exist')
+            cy.contains(futureAnnouncementTitle).should('not.exist')
+            cy.contains(pastAnnouncementTitle).should('not.exist')
+            
+            // Now check the Overview page with iframe
+            cy.sakaiToolClick('Overview');
+            
+            // Wait for iframe to load and check its contents
+            cy.get('iframe.portletMainIframe[title*="Recent Announcements"]')
+              .should('be.visible')
+              .then($iframe => {
+                // Get iframe's body and verify announcement visibility
+                const iframe = $iframe.contents().find('body');
+                cy.wrap(iframe).within(() => {
+                  cy.contains(currentAnnouncementTitle).should('exist');
+                  cy.contains(futureAnnouncementTitle).should('not.exist');
+                  cy.contains(pastAnnouncementTitle).should('not.exist');
+                });
+              });
+        });
     })
 });
