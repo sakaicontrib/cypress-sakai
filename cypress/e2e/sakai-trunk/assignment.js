@@ -49,7 +49,6 @@ describe('Assignments', function () {
             cy.wait(10000)
             cy.get('sakai-grader-toggle input').check()
             cy.get('#submissionList a').contains('student0011').click()
-            //cy.get('#grader-link-block button').click()
             cy.get('#letter-grade-selector').select('B')
             cy.get('.act .active').first().click()
             cy.get('button').contains('Return to List').click()
@@ -171,7 +170,7 @@ describe('Assignments', function () {
             cy.sakaiLogin(student12)
             cy.visit(sakaiUrl)
             cy.get('button.responsive-allsites-button').first().click()
-            cy.get('ul.site-page-list a.btn-nav').contains('Assignments').click()
+            cy.get('.site-list-item-collapse.collapse.show a.btn-nav').contains('Assignments').click()
 
             cy.get('a').contains(assignTitle).first().click()
 
@@ -206,6 +205,7 @@ describe('Assignments', function () {
             cy.get('#submissionList a').contains(student12).click()
 
             // Allow student12 to resubmit
+            cy.get('.inline-feedback-button').first().click()
             cy.get('#grader-feedback-text').first().contains('This is my submission text')
             //cy.get("#grader-link-block button").first().click()
             cy.get('#score-grade-input').type('50.56')
@@ -271,6 +271,5 @@ describe('Assignments', function () {
             "<p>Please submit again.</p>")
            cy.get('input#save-and-return').click()
         })
-  
     })
 });
