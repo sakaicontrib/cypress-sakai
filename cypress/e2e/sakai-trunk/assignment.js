@@ -42,7 +42,7 @@ describe('Assignments', function () {
                 "<p>What is chiefly responsible for the increase in the average length of life in the USA during the last fifty years?</p>")
     
             // Save
-            cy.get('div.act input.active').first().click();
+            cy.get('#grader-save-buttons button').contains('Save and Release').click();
 
             // Confirm can grade it with letters
             cy.get('.itemAction a').last().click()
