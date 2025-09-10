@@ -50,7 +50,7 @@ describe('Assignments', function () {
             cy.get('sakai-grader-toggle input').check()
             cy.get('#submissionList a').contains('student0011').click()
             cy.get('#letter-grade-selector').select('B')
-            cy.get('.act .active').first().click()
+            cy.get('button').contains('Save and Release').click()
             cy.get('button').contains('Return to List').click()
             cy.get('table#submissionList tr').eq(1).find('td[headers="grade"]').contains('B')
             cy.get('.navIntraTool a').first().click()
