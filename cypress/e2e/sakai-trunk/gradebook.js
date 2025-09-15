@@ -41,6 +41,9 @@ describe('Gradebook', { defaultCommandTimeout: 95000 }, () => {
       // DOM is being modified by Wicket so wait for the POST to complete
       // Wicket 9 upgrade: portal/site/49638381-cc95-4770-9814-a0749e9ed0c8/tool/64165fcd-6430-47a6-bc3c-66f85b6deea7/settings?1-1.0-form-categoryPanel-settingsCategoriesPanel-categoriesWrap-categoriesView-1-name
       cy.intercept('POST', '/portal/site/*/tool/*/settings?1*form-categoryPanel-settingsCategoriesPanel-categoriesWrap*').as('addCat');
+      
+      // Intercept requests for category type changes (fired when radio button is clicked)
+      cy.intercept('POST', '/portal/site/*/tool/*/settings?*-form-categoryPanel-settingsCategoriesPanel-categoryType').as('categoryTypeChange');
 
       // We want to use categories
       cy.get('.navIntraTool a').contains('Settings').click();
@@ -52,8 +55,11 @@ describe('Gradebook', { defaultCommandTimeout: 95000 }, () => {
       // Click the specific radio button for categories and weighting (value="radio4")
       cy.get('input[type="radio"][value="radio4"]').should('be.visible').should('not.be.disabled').click();
       
-      // Wait for any UI changes after selecting the radio button
-      cy.wait(1000);
+      // Wait for the category type change request to complete
+      cy.wait('@categoryTypeChange', { timeout: 10000 });
+      
+      // Final verification that the correct radio button is selected
+      cy.get('input[type="radio"][value="radio4"]').should('be.checked');
 
       cats.forEach((cat, i) => {
         cy.get('.gb-category-row input[name$="name"]').eq(i).type(cats[i].letter);
