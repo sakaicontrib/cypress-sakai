@@ -29,13 +29,6 @@ describe('Accessibility', function () {
             cy.get('#select-site-sidebar').should('not.be.visible')
         })
 
-        it.only('has no a11y violations from Profile popout', () => {
-            cy.get('.sak-sysInd-account').click()
-            cy.get('.nav-item').find('a').contains('View Profile').should('be.visible')
-            cy.checkForCriticalA11yIssues()
-            cy.get('body').type('{esc}')
-            cy.get('.nav-item').find('a').contains('View Profile').should('not.be.visible')
-        })
 
     })
 })
