@@ -1,7 +1,6 @@
 describe('Gradebook', { defaultCommandTimeout: 95000 }, () => {
 
   const instructor = 'instructor1';
-  const student = 'student0011';
   let sakaiUrl;
   const cats = [
     {letter: "A", percent: 10},
@@ -17,7 +16,7 @@ describe('Gradebook', { defaultCommandTimeout: 95000 }, () => {
     })
 
     // Rubrics seems to have some issues with webcomponent and load order
-    Cypress.on('uncaught:exception', (err, runnable) => {
+    Cypress.on('uncaught:exception', () => {
       // returning false here prevents Cypress from failing the test
       return false
     })
@@ -49,17 +48,24 @@ describe('Gradebook', { defaultCommandTimeout: 95000 }, () => {
       cy.get('.navIntraTool a').contains('Settings').click();
       cy.get('.accordion button').contains('Categories').click();
       
-      // Wait for the categories section to be expanded and radio buttons to be visible
-      cy.get('input[type="radio"]').should('be.visible');
-      
-      // Click the specific radio button for categories and weighting (value="radio4")
-      cy.get('input[type="radio"][value="radio4"]').should('be.visible').should('not.be.disabled').click();
-      
+      // Wait for the categories section to be expanded and radio buttons to be visible (scoped)
+      cy.get('#settingsCategories input[type="radio"]').filter(':visible').should('exist');
+
+      // Select the radio via group name and label text to avoid brittle value matches
+      cy.get('#settingsCategories').within(() => {
+        cy.get('input[name="categoryPanel:settingsCategoriesPanel:categoryType"]').should('have.length', 3);
+        cy.contains('label', 'Categories & weighting')
+          .find('input[type="radio"]').should('be.visible').and('not.be.disabled')
+          .check({ force: true });
+      });
+
       // Wait for the category type change request to complete
-      cy.wait('@categoryTypeChange', { timeout: 10000 });
-      
-      // Final verification that the correct radio button is selected
-      cy.get('input[type="radio"][value="radio4"]').should('be.checked');
+      cy.wait('@categoryTypeChange', { timeout: 15000 });
+
+      // Verify radio states by label text
+      cy.contains('#settingsCategories label', 'Categories & weighting').find('input[type="radio"]').should('be.checked');
+      cy.contains('#settingsCategories label', 'No categories').find('input[type="radio"]').should('not.be.checked');
+      cy.contains('#settingsCategories label', 'Categories only').find('input[type="radio"]').should('not.be.checked');
 
       cats.forEach((cat, i) => {
         cy.get('.gb-category-row input[name$="name"]').eq(i).type(cats[i].letter);
@@ -86,8 +92,7 @@ describe('Gradebook', { defaultCommandTimeout: 95000 }, () => {
           cy.get(".wicket-modal select[name$='category']").select(`${cat.letter} (${cat.percent}%)`);
           cy.get(".wicket-modal button[name$='submit']").click();
         });
-        cy.wait(2000);
-        cy.get(".messageSuccess").scrollIntoView().should('be.visible');
+        cy.get(".messageSuccess").should('exist').scrollIntoView().should('be.visible');
       });
     });
 
