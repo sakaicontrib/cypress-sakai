@@ -45,7 +45,15 @@ describe('Gradebook', { defaultCommandTimeout: 95000 }, () => {
       // We want to use categories
       cy.get('.navIntraTool a').contains('Settings').click();
       cy.get('.accordion button').contains('Categories').click();
-      cy.get('input[type="radio"]').last().click();
+      
+      // Wait for the categories section to be expanded and radio buttons to be visible
+      cy.get('input[type="radio"]').should('be.visible');
+      
+      // Click the specific radio button for categories and weighting (value="radio4")
+      cy.get('input[type="radio"][value="radio4"]').should('be.visible').should('not.be.disabled').click();
+      
+      // Wait for any UI changes after selecting the radio button
+      cy.wait(1000);
 
       cats.forEach((cat, i) => {
         cy.get('.gb-category-row input[name$="name"]').eq(i).type(cats[i].letter);
@@ -72,8 +80,8 @@ describe('Gradebook', { defaultCommandTimeout: 95000 }, () => {
           cy.get(".wicket-modal select[name$='category']").select(`${cat.letter} (${cat.percent}%)`);
           cy.get(".wicket-modal button[name$='submit']").click();
         });
-        cy.wait(2000)
-        cy.get(".messageSuccess").scrollIntoView().should('be.visible')
+        cy.wait(2000);
+        cy.get(".messageSuccess").scrollIntoView().should('be.visible');
       });
     });
 
