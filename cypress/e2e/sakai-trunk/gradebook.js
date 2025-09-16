@@ -51,19 +51,34 @@ describe('Gradebook', { defaultCommandTimeout: 95000 }, () => {
       // Wait for the categories section to be expanded and radio buttons to be visible (scoped)
       cy.get('#settingsCategories input[type="radio"]').filter(':visible').should('exist');
 
-      // Select the radio via group name and label text to avoid brittle value matches
+      // Wicket replaces radio inputs and their labels on change via Ajax callbacks.
+      // That can revert the checked state and stale our references. We click the label
+      // (not the input) and wait for the network call, then click again so the final
+      // rendered nodes reflect the intended selection.
+      // Select via label click (handles elements being replaced by Wicket). Click twice defensively.
       cy.get('#settingsCategories').within(() => {
         cy.get('input[name="categoryPanel:settingsCategoriesPanel:categoryType"]').should('have.length', 3);
         cy.contains('label', 'Categories & weighting')
-          .find('input[type="radio"]').should('be.visible').and('not.be.disabled')
-          .check({ force: true });
+          .should('be.visible')
+          .click({ force: true });
       });
 
       // Wait for the category type change request to complete
       cy.wait('@categoryTypeChange', { timeout: 15000 });
 
-      // Verify radio states by label text
-      cy.contains('#settingsCategories label', 'Categories & weighting').find('input[type="radio"]').should('be.checked');
+      // Some Wicket callbacks can re-render and revert selection; click again if needed
+      cy.get('#settingsCategories').within(() => {
+        cy.contains('label', 'Categories & weighting')
+          .should('be.visible')
+          .click({ force: true });
+      });
+      cy.wait('@categoryTypeChange', { timeout: 15000 });
+
+      // Verify checked state via group :checked value
+      cy.get('#settingsCategories input[name="categoryPanel:settingsCategoriesPanel:categoryType"]:checked')
+        .should('have.value', 'radio4');
+      
+      // Verify other options are not selected
       cy.contains('#settingsCategories label', 'No categories').find('input[type="radio"]').should('not.be.checked');
       cy.contains('#settingsCategories label', 'Categories only').find('input[type="radio"]').should('not.be.checked');
 
