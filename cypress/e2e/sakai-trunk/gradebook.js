@@ -52,27 +52,27 @@ describe('Gradebook', { defaultCommandTimeout: 95000 }, () => {
       cy.get('#settingsCategories input[type="radio"]').filter(':visible').should('exist');
 
       // Wicket replaces radio inputs and their labels on change via Ajax callbacks.
-      // That can revert the checked state and stale our references. We click the label
-      // (not the input) and wait for the network call, then click again so the final
-      // rendered nodes reflect the intended selection.
-      // Select via label click (handles elements being replaced by Wicket). Click twice defensively.
+      // That can revert the checked state and stale our references. Click the label (not the input)
+      // and wait for the network call; if after the re-render the correct value isn't checked,
+      // click the label one more time (no second wait) and assert.
+      // Select via label click (handles elements being replaced by Wicket).
       cy.get('#settingsCategories').within(() => {
         cy.get('input[name="categoryPanel:settingsCategoriesPanel:categoryType"]').should('have.length', 3);
-        cy.contains('label', 'Categories & weighting')
+        cy.contains('label', 'Categories & weighting').as('catWeightLabel')
           .should('be.visible')
           .click({ force: true });
       });
 
-      // Wait for the category type change request to complete
+      // Wait for the category type change request to complete (single network call)
       cy.wait('@categoryTypeChange', { timeout: 15000 });
 
-      // Some Wicket callbacks can re-render and revert selection; click again if needed
-      cy.get('#settingsCategories').within(() => {
-        cy.contains('label', 'Categories & weighting')
-          .should('be.visible')
-          .click({ force: true });
-      });
-      cy.wait('@categoryTypeChange', { timeout: 15000 });
+      // If the selected value isn't radio4 after re-render, click the label once more (no second wait)
+      cy.get('#settingsCategories input[name="categoryPanel:settingsCategoriesPanel:categoryType"]:checked')
+        .then(($checked) => {
+          if (!$checked.length || $checked.val() !== 'radio4') {
+            cy.get('@catWeightLabel').click({ force: true });
+          }
+        });
 
       // Verify checked state via group :checked value
       cy.get('#settingsCategories input[name="categoryPanel:settingsCategoriesPanel:categoryType"]:checked')
