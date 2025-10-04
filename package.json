@@ -13,7 +13,9 @@
     "eslint-plugin-cypress": "^2.12.1"
   },
   "scripts": {
-    "cypress:open": "cypress open"
+    "cypress:open": "cypress open",
+    "discover:tools": "cypress run --spec cypress/e2e/sakai-trunk/_discover_tool_ids.js",
+    "generate:stubs": "node scripts/generate-sakai-tool-stubs.js"
   },
   "repository": {
     "type": "git",
