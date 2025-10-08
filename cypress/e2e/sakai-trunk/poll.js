@@ -23,7 +23,7 @@ describe('Polls (sakai.poll)', () => {
     cy.get('.site-list-item-collapse.collapse.show a.btn-nav').contains(/Poll/i).click();
 
     // Click Add/New in the tool’s intra-nav
-    cy.get('.navIntraTool a, .navIntraTool button').contains(/Add|New/i).first().click();
+    cy.get('.navIntraTool a, .navIntraTool button, ul.nav a').contains(/Add|New/i).first().click();
 
     // Fill the question/title field – prefer a label called "Question" or "Title"
     cy.get('form').within(() => {
