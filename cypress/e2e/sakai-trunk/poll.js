@@ -5,6 +5,11 @@ describe('Polls (sakai.poll)', () => {
   const TOOL_ID = 'sakai.poll';
   const TOOL_ID_ESCAPED = TOOL_ID.replace(/\./g, '\\.');
   const pollTitle = `Cypress Poll ${Date.now()}`;
+  const pollForm = () =>
+    cy
+      .get('form:visible')
+      .filter((_, form) => !form.closest('sakai-search') && !form.closest('.offcanvas-body'))
+      .first();
 
   beforeEach(() => {
     cy.intercept('POST', 'https://www.google-analytics.com/j/collect*', (req) => { req.destroy() }).as('ga');
@@ -26,7 +31,7 @@ describe('Polls (sakai.poll)', () => {
     cy.get('.navIntraTool a, .navIntraTool button, ul.nav a').contains(/Add|New/i).first().click();
 
     // Fill the question/title field – prefer a label called "Question" or "Title"
-    cy.get('form').within(() => {
+    pollForm().within(() => {
       cy.get('label').then($labels => {
         const $qLabel = $labels.filter((_, el) => /question|title/i.test(el.textContent || ''));
         if ($qLabel.length) {
@@ -40,7 +45,7 @@ describe('Polls (sakai.poll)', () => {
     });
 
     // Enter two options – many forms show at least two option inputs by default
-    cy.get('form').within(() => {
+    pollForm().within(() => {
       cy.get('input[type="text"]').then($ins => {
         // Heuristic: question/title is usually the first text input, so use next two as options
         const first = $ins.eq(1);
@@ -51,10 +56,11 @@ describe('Polls (sakai.poll)', () => {
     });
 
     // Save the poll
-    cy.contains('input[type="submit"], button[type="submit"], .act input, .act button', /Save|Add|Create/i).first().click();
+    pollForm().within(() => {
+      cy.contains('input[type="submit"], button[type="submit"], .act input, .act button', /Save|Add|Create/i).first().click();
+    });
 
     // Verify the poll appears in the list
     cy.contains(pollTitle).should('exist');
   });
 });
-
