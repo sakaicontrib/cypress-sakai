@@ -22,15 +22,15 @@ describe('Dashboard (sakai.dashboard)', () => {
     cy.get('.site-list-item-collapse.collapse.show a.btn-nav').contains(/Dashboard/i).click();
 
     // Enter edit mode
-    cy.contains('button, a', /Edit\s*Dashboard/i).first().click({ force: true });
+    cy.get('#course-dashboard-edit button').first().click({ force: true });
 
     // Save changes (no-op if nothing changed)
-    cy.contains('button, input[type="submit"], .act button, .act input', /Save/i)
+    cy.get('#course-dashboard-save button')
       .first()
       .click({ force: true });
 
     // Basic assertion: we’re back on the dashboard with content visible
     cy.get('#content, main, .portletBody').should('exist');
-    cy.contains(/Edit\s*Dashboard/i).should('exist');
+    cy.get('#course-dashboard-edit button').should('exist');
   });
 });
