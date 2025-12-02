@@ -44,21 +44,57 @@ describe('Polls (sakai.poll)', () => {
       });
     });
 
-    // Enter two options – many forms show at least two option inputs by default
+    // Fill in date fields (openDate and closeDate)
+    // These are datetime-local inputs requiring format: YYYY-MM-DDThh:mm
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    const datetimeStr = `${year}-${month}-${day}T${hours}:${minutes}`;
+
     pollForm().within(() => {
-      cy.get('input[type="text"]').then($ins => {
-        // Heuristic: question/title is usually the first text input, so use next two as options
-        const first = $ins.eq(1);
-        const second = $ins.eq(2);
-        if (first.length) first.clear().type('Yes');
-        if (second.length) second.clear().type('No');
-      });
+      cy.get('input[name="openDate"]').clear();
+      cy.get('input[name="openDate"]').type(datetimeStr);
+
+      cy.get('input[name="closeDate"]').clear();
+      cy.get('input[name="closeDate"]').type(datetimeStr);
     });
 
-    // Save the poll
+    // Save the poll (this will navigate to the "Add an Option" screen)
     pollForm().within(() => {
-      cy.contains('input[type="submit"], button[type="submit"], .act input, .act button', /Save|Add|Create/i).first().click();
+      cy.contains('input[type="submit"], button[type="submit"], .act input, .act button', /Save|Add|Create|Continue/i).first().click();
     });
+
+    // Wait for "Add an Option" page to load - look for textarea
+    cy.get('textarea', {timeout: 10000}).should('be.visible');
+
+    // Add first option "Yes" and click Save
+    cy.get('textarea').clear();
+    cy.get('textarea').type('Yes');
+    cy.contains('button, input[type="submit"]', /^Save$/i).click();
+
+    // Save takes us back to the poll edit form
+    // Wait for success banner to confirm we're on the edit poll view
+    cy.get('.sak-banner-success', {timeout: 10000}).should('be.visible');
+
+    // Click "Add option" button to add the second option
+    cy.get('input[type="button"][value="Add option"]').click();
+
+    // Wait for "Add an Option" page to load again
+    cy.get('textarea', {timeout: 5000}).should('be.visible');
+
+    // Add second option "No" and click Save
+    cy.get('textarea').clear();
+    cy.get('textarea').type('No');
+    cy.get('input[type="submit"][value="Save"]').click();
+
+    // Wait for success banner after saving second option
+    cy.get('.sak-banner-success', {timeout: 10000}).should('be.visible');
+
+    cy.get('input[type="submit"][value="Save"]').click();
+    cy.get('.sak-banner-success', {timeout: 10000}).contains("Poll saved successfully");
 
     // Verify the poll appears in the list
     cy.contains(pollTitle).should('exist');
