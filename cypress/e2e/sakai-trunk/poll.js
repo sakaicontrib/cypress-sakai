@@ -88,12 +88,12 @@ describe('Polls (sakai.poll)', () => {
     // Add second option "No" and click Save
     cy.get('textarea').clear();
     cy.get('textarea').type('No');
-    cy.get('input[type="submit"][value="Save"]').click();
+    cy.contains('button, input[type="submit"]', /^Save$/i).click();
 
     // Wait for success banner after saving second option
     cy.get('.sak-banner-success', {timeout: 10000}).should('be.visible');
 
-    cy.get('input[type="submit"][value="Save"]').click();
+    cy.contains('button, input[type="submit"]', /^Save$/i).click();
     cy.get('.sak-banner-success', {timeout: 10000}).contains("Poll saved successfully");
 
     // Verify the poll appears in the list
