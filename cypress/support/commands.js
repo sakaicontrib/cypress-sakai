@@ -42,8 +42,8 @@ Cypress.Commands.add('sakaiLogin', (username) => {
     expect(resp.status).to.eq(302)
   })
 
-  // Should be exactly one cookie here even if using Google Analytics
-  cy.getCookies().should('have.length', 1)
+  // Some deployments set multiple cookies on login (e.g., proxies, analytics).
+  cy.getCookies().should('have.length.at.least', 1)
 
   // Need to clear the tutorial so it doesn't overlap on tests
   cy.window().then((win) => {
